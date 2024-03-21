@@ -1,11 +1,10 @@
 <template>
-  <h2>登入頁面</h2>
   <div class="container">
-      <div class="row justify-content-center">
-        <h1 class="h3 mb-3 font-weight-normal">
+      <div class="login-card">
+        <h1>
           請先登入
         </h1>
-        <div class="col-8">
+        <div class="login-form">
           <form id="form" class="form-signin" v-on:submit.prevent="login">
             <!-- v-on 監聽事件，此處的 Event = "submit";
               Event Handler = "login"。"login" 定義在 "log-in.js" 的 methods  -->
@@ -27,9 +26,6 @@
           </form>
         </div>
       </div>
-      <p class="mt-5 mb-3 text-muted">
-        &copy; 2021~∞ - 六角學院
-      </p>
     </div>
 </template>
 
@@ -66,3 +62,25 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-card {
+  width: 20em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .login-form {
+    width: 100%;
+    margin-top: 3em;
+  }
+}
+
+</style>

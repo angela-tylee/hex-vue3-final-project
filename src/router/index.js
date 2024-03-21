@@ -8,22 +8,42 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: () => import('../views/HomeView.vue'),
+        component: () => import('../views/front/HomeView.vue'),
       },
       {
         path: 'about',
         name: 'About',
-        component: () => import('../views/AboutView.vue'),
+        component: () => import('../views/front/AboutView.vue'),
       },
       {
         path: 'products',
+        name: 'ProductsList',
+        component: () => import('../views/front/ProductsView.vue'),
+      },
+      {
+        path: 'product/:id',
         name: 'Product',
-        component: () => import('../views/ProductsView.vue'),
+        component: () => import('../views/front/ProductPageView.vue'),
+      },
+      {
+        path: 'blogs',
+        name: 'Blogs',
+        component: () => import('../views/front/BlogsView.vue'),
+      },
+      {
+        path: 'blog',
+        name: 'blog',
+        component: () => import('../views/front/BlogView.vue'),
       },
       {
         path: 'cart',
         name: 'Cart',
-        component: () => import('../views/CartView.vue'),
+        component: () => import('../views/front/CartView.vue'),
+      },
+      {
+        path: 'checkout',
+        name: 'Checkout',
+        component: () => import('../views/front/CheckoutView.vue'),
       },
     ],
   },
@@ -35,17 +55,22 @@ const routes = [
   },
   {
     path: '/admin',
-    component: () => import('../views/dashboard/DashboardView.vue'),
+    component: () => import('../views/admin/DashboardView.vue'),
     children: [
       {
         path: 'products',
         name: 'Products',
-        component: () => import('../views/dashboard/ProductsView.vue'),
+        component: () => import('../views/admin/ProductsView.vue'),
       },
       {
-        path: 'order',
-        name: 'Order',
-        component: () => import('../views/dashboard/OrderView.vue'),
+        path: 'product-page',
+        name: 'ProductPage',
+        component: () => import('../views/admin/ProductPageView.vue'),
+      },
+      {
+        path: 'orders',
+        name: 'Orders',
+        component: () => import('../views/admin/OrdersView.vue'),
       },
     ],
   },
