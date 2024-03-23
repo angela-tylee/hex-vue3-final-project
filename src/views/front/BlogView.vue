@@ -3,9 +3,9 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Library</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Data</li>
+      <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
+      <li class="breadcrumb-item"><RouterLink to="/blogs">Blog</RouterLink></li>
+      <li class="breadcrumb-item active text-primary" aria-current="page">{{ blog.title }}</li>
     </ol>
     </nav>
     <div class="blog-title">

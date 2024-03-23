@@ -50,12 +50,17 @@
           </tbody>
         </table>
         <!-- loading -->
-        <div class="loading" v-show="status.cartLoading">
+        <div class="loading" v-if="status.cartLoading">
           <div class="spinner-border text-primary" role="status"></div>
         </div>
         <!-- <p class="text-center" v-if="carts.carts.length === 0">您的購物車沒有東西。</p> -->
         <button type="button" class="btn btn-primary text-cus-cream"
-        @click="removeCartItemAll">清空購物車</button>
+        @click="removeCartItemAll" :disabled="status.removeCartLoading">
+        <i class="spinner-border text-cus-cream"
+          style="width: 1.2em; height: 1.2em" role="status"
+          v-if="status.removeCartLoading">
+        </i>
+        清空購物車</button>
       </div>
       <div class="grid-card order-info bg-primary">
         <div class="order-info-content">
@@ -66,15 +71,26 @@
             <div class="col-6 mt-4 text-cus-cream">Subtotal:</div>
             <div class="col-6 mt-4 text-cus-cream text-end">$ {{ carts.total }}</div>
             <div class="col-12 mt-4 text-cus-cream input-group">
-              <input type="text" class="form-control" placeholder="Enter Coupon Code"
-              aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-secondary text-cus-cream" type="button" id="button-addon2">
+              <input type="text" class="form-control" placeholder="Enter SWEETTOOTH2024"
+              aria-describedby="button-addon2" v-model="coupon.code">
+              <button class="btn btn-secondary text-cus-cream" type="button" id="button-addon2"
+              @click.prevent = "applyCoupon(coupon.code)"
+              :disabled = "status.couponLoading">
+                <i class="spinner-border text-cus-cream"
+                  style="width: 1.2em; height: 1.2em" role="status"
+                  v-if="status.couponLoading">
+                </i>
                 Apply
               </button>
             </div>
+            <div class="col-12 mt-4">
+              <p v-if="coupon.success" class="text-cus-cream">已套用優惠券！</p>
+            </div>
             <div class="col-6 mt-4 text-cus-cream fs-5 fw-semibold">Total:</div>
-            <div class="col-6 mt-4 text-cus-cream text-end fs-5 fw-semibold">
-              $ {{ carts.final_total }}</div>
+            <div class="col-6 mt-4 text-end fs-5 fw-semibold">
+              <span class="text-cus-cream" v-if="coupon.success">$ {{ carts.final_total }}</span>
+              <span class="text-cus-cream" v-else>$ {{ carts.total }}</span>
+            </div>
           </div>
         </div>
         <div class="col-12 mt-4">
@@ -91,14 +107,6 @@
 </template>
 
 <script>
-// const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
-
-// const { required, email, min, max } = VeeValidateRules;
-
-// defineRule('required', required);
-// defineRule('email', email);
-// defineRule('min', min);
-// defineRule('max', max);
 import axios from 'axios';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
@@ -107,19 +115,15 @@ export default {
   data() {
     return {
       carts: {},
+      coupon: {
+        code: '',
+        success: false,
+      },
       status: {
         addCartLoading: '',
-        cartQtyLoading: '',
+        removeCartLoading: false,
         cartLoading: false,
-      },
-      form: {
-        user: {
-          name: '',
-          email: '',
-          tel: '',
-          address: '',
-        },
-        message: '',
+        couponLoading: false,
       },
     };
   },
@@ -138,10 +142,8 @@ export default {
         });
     },
     removeCartItem(id) {
-      this.status.cartQtyLoading = id;
       axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${id}`)
         .then(() => {
-          this.status.cartQtyLoading = '';
           this.getCart();
         })
         .catch((error) => {
@@ -149,11 +151,14 @@ export default {
         });
     },
     removeCartItemAll() {
+      this.status.removeCartLoading = true;
       axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/carts`)
         .then(() => {
+          this.status.removeCartLoading = false;
           this.getCart();
         })
         .catch((error) => {
+          this.status.removeCartLoading = false;
           alert(error.response.data.message);
         });
     },
@@ -170,28 +175,44 @@ export default {
           this.status.productsLoading = false;
         });
     },
-    // createOrder() {
-    //   const order = this.form;
-    //   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/order`, { data: order })
+    applyCoupon(couponCode) {
+      const coupon = {
+        code: couponCode,
+      };
+      this.status.couponLoading = true;
+      axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/coupon`, { data: coupon })
+        .then((response) => {
+          this.status.couponLoading = false;
+          console.log(response);
+          this.coupon.success = response.data.success;
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+          this.status.couponLoading = false;
+        });
+    },
+    // createCoupon() {
+    //   const coupon = {
+    //     title: 'Evergreen Discount',
+    //     is_enabled: 1,
+    //     percent: 80,
+    //     due_date: 2556115199,
+    //     code: 'SWEETTOOTH2024',
+    //   };
+    //   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/admin/coupon`, { data: coupon })
     //     .then((response) => {
-    //       alert(response.data.message);
-    //       this.$refs.form.resetForm();
-    //       this.getCart();
+    //       console.log(response);
+    //       // this.carts = response.data.data;
     //     })
     //     .catch((error) => {
     //       alert(error.response.data.message);
     //     });
     // },
+
   },
-  // components: {
-  //   userProductModal,
-  //   VForm: Form,
-  //   VField: Field,
-  //   ErrorMessage: ErrorMessage,
-  // },
   mounted() {
     this.getCart();
-    console.log(this.carts);
+    // this.createCoupon();
   },
 };
 

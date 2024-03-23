@@ -4,7 +4,7 @@
       <h2>文章列表</h2>
       <div class="btn-group mt-3">
         <button type="button" class="btn btn-primary btn-sm"
-        @click="openModal('new', blog)">
+        @click="openModal('new')">
         新增文章
         </button>
       </div>
@@ -28,11 +28,11 @@
             <td>
               <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary btn-sm"
-                @click="openModal('edit', blog)">
+                @click="openModal('edit', blog.id)">
                 編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm"
-                @click="openModal('delete', blog)">
+                @click="openModal('delete', blog.id)">
                 刪除
                 </button>
               </div>
@@ -45,6 +45,7 @@
   </div>
 
     <!-- Modal -->
+    <!-- editProductModal -->
     <div id="productModal" ref="productModal" class="modal fade"
   tabindex="-1" aria-labelledby="productModalLabel"
       aria-hidden="true">
@@ -67,18 +68,6 @@
                     v-model="temp.image">
                   </div>
                   <img class="img-fluid" :src="temp.image" alt="">
-                </div>
-                <div>
-                  <button class="btn btn-outline-primary btn-sm d-block w-100 mt-3"
-                  @click="createImages">
-                    新增圖片
-                  </button>
-                </div>
-                <div>
-                  <button class="btn btn-outline-danger btn-sm d-block w-100 mt-3"
-                  @click="delImages">
-                    刪除圖片
-                  </button>
                 </div>
               </div>
               <div class="col-sm-8">
@@ -116,7 +105,7 @@
                 <div class="mb-3">
                   <div class="form-check">
                     <input id="isPublic" class="form-check-input" type="checkbox"
-                    :true-value="1" :false-value="0"
+                    :true-value="true" :false-value="false"
                       v-model="temp.isPublic">
                     <label class="form-check-label" for="isPublic">是否發布</label>
                   </div>
@@ -135,6 +124,8 @@
         </div>
       </div>
     </div>
+
+    <!-- delProductModal -->
     <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
       aria-labelledby="delProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -180,20 +171,12 @@ export default {
     return {
       blogs: [],
       temp: {
-        // title: '',
-        // description: '',
-        // image: '',
-        // tag: [],
-        // create_at: '',
-        // author: '',
-        // isPublic: false,
-        // content: '',
       },
       isNew: false,
     };
   },
   methods: {
-    getArticle() {
+    getArticles() {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/articles`;
       axios.get(url)
         .then((response) => {
@@ -204,9 +187,54 @@ export default {
           alert(err.response.data.message);
         });
     },
-    openArticle(item) {
-      this.temp = item;
+    // openArticle(item) {
+    //   this.temp = item;
+    // },
+    getArticle(id) {
+      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/article/${id}`;
+      axios.get(url)
+        .then((response) => {
+          console.log(response);
+          this.temp = response.data.article;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
     },
+    openModal(isNew, id) {
+      if (isNew === 'new') {
+        this.isNew = true;
+        this.temp = {
+          create_at: Date.now(),
+        };
+        articleModal.show();
+      } else if (isNew === 'edit') {
+        this.getArticle(id);
+        this.isNew = false;
+        articleModal.show();
+      } else if (isNew === 'delete') {
+        delArticleModal.show();
+      }
+    },
+    // openModal(isNew, item) {
+    //   if (isNew === 'new') {
+    //     this.temp = {
+    //       // imagesUrl: [],
+    //       content: '',
+    //     };
+    //     this.isNew = true;
+    //     articleModal.show();
+    //   } else if (isNew === 'edit') {
+    //     this.temp = { ...item };
+    //     // 以展開 (spread) 進行淺拷貝（shallow copy)
+    //     this.isNew = false;
+    //     articleModal.show();
+    //   } else if (isNew === 'delete') {
+    //     this.temp = { ...item };
+    //     // 以展開 (spread) 進行淺拷貝（shallow copy)
+    //     delArticleModal.show();
+    //   }
+    // },
     updateArticle() {
       let url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/article`;
       let http = 'post'; // 根據資料是否已存在會對資料做不同的操作，因此 http verb 儲存在一個可重新賦值的變數中
@@ -223,31 +251,13 @@ export default {
           alert(response.data.message);
           console.log(response);
           articleModal.hide();
-          this.getArticle();
+          this.getArticles();
         })
         .catch((error) => {
-          alert(error.message);
-          console.log(this.temp);
+          alert(error.response.data.message);
+          console.log(error);
           // alert(error.data.message);
         });
-    },
-    openModal(isNew, item) {
-      if (isNew === 'new') {
-        this.temp = {
-          imagesUrl: [],
-        };
-        this.isNew = true;
-        articleModal.show();
-      } else if (isNew === 'edit') {
-        this.temp = { ...item };
-        // 以展開 (spread) 進行淺拷貝（shallow copy)
-        this.isNew = false;
-        articleModal.show();
-      } else if (isNew === 'delete') {
-        this.temp = { ...item };
-        // 以展開 (spread) 進行淺拷貝（shallow copy)
-        delArticleModal.show();
-      }
     },
     delArticle() {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/article/${this.temp.id}`;
@@ -256,7 +266,7 @@ export default {
         .then((response) => {
           alert(response.data.message);
           delArticleModal.hide();
-          this.getArticle();
+          this.getArticles();
         })
         .catch((error) => {
           alert(error.data.message);
@@ -264,15 +274,15 @@ export default {
     },
     createArticle() {
       const blog = {
-        title: '探索法式鹹派的美味歷史',
-        description: '法式鹹派以其酥脆的麵皮和滑嫩的蛋奶餡料，征服了世界各地美食愛好者的心和味蕾。這道美味佳餚有著數百年的悠久歷史，起源深遠，讓我們一同踏上烹飪之旅，探索鹹派的起源、演變和持久魅力。',
+        title: '成功的秘訣：打造完美的塔皮',
+        description: '要打造完美的塔皮底，掌握細節至關重要。從選擇合適的材料到完美烘焙，每一個步驟都在實現塔皮完美上扮演關鍵角色。在這個指南中，我們將深入探討一些重要的技巧，幫助您提升塔皮水準，打造出酥脆、奶香、美味的塔皮底。',
         image: '',
         tag: [],
         create_at: 1555459220,
         author: 'angela',
         isPublic: true,
         content:
-        '<h3>鹹派的起源：</h3><p>鹹派的根源可以追溯到中世紀的德國，當時洛林王國（今日的洛林）的烘焙師傅創造了一種名為“庫琴（kuchen）”的鹹派。這種早期版本的鹹派由麵皮製成，填入蛋、奶油和當地的食材，如蔬菜、肉類和奶酪。</p><h3>法國的演變：</h3><p>鹹派在16世紀時開始在法國流行起來，成為洛林地區的一道標誌性菜餚。鹹派經過進一步的改良，添加了培根、洋蔥和格呂耶爾奶酪等食材。鹹派這個名詞本身來源於德語詞彙“kuchen”，意為蛋糕，在洛林方言中演變成“kische”，最終進入法國烹飪詞彙成為“quiche”。</p><p>鹹派開始與法國烹飪文化聯繫在一起，成為貴族和皇室豪華宴會上的必備佳餚。然而，直到19世紀，鹹派才在洛林以外地區廣受歡迎。烹飪食譜的出版以及巴黎咖啡館和小酒館的增加，推動著鹹派走向了烹飪的舞台，使其成為了法國乃至全世界喜愛的菜餚。</p><h3>全吸引力：</h3><p>在20世紀，鹹派在法國以外的地區迅速流行開來，其中一部分歸功於美國偶像廚師茱莉亞·克萊（Julia Child），她將法國烹飪技巧介紹給了全球觀眾。她的暢銷烹飪書《法國烹飪的藝術》中收錄了鹹派洛林的食譜，使數百萬家庭廚師接觸到了這道經典美食。</p><p>鹹派的多功能性和適應性進一步增加了其在全球的吸引力。從傳統的鹹派洛林到創意菜式，如菠菜、蘑菇和海鮮，鹹派已經成為了世界各地廚房的愛餐之選。</p><h3>持久的傳奇：</h3><p>如今，鹹派仍然是世界各地家庭、餐廳和咖啡館中珍愛的烹飪經典。其豐富的蛋奶餡料和酥脆的麵皮繼續著迷味蕾，帶來一種舒適和愉悅的感覺</p><p>無論是熱的還是冷的，作為主菜還是開胃菜，鹹派都體現了法國烹飪傳統的精髓，同時擁抱創新和創意。其持久的傳奇是對美食的永恆讚美，也是分享美味佳餚與親朋好友的共享歡樂。</p><p>總結，鹹派的歷史證明了其持久的吸引力和烹飪多樣性。從中世紀德國的起源到成為全球經典佳餚的地位，鹹派在世界烹飪文化中贏得了不朽的地位。所以，下次當你品嚐一口鹹派時，不僅要品味美味，還要感受這道經典佳餚背後豐富的歷史。祝您食慾大開！</p>',
+        '<p>踏上打造完美塔皮的旅程，就像是打開糕點大師的秘密一樣。這是一場精密和技巧的微妙舞蹈，在其中每一個成分和步驟都擁有將麵粉和奶油的簡單混合物變成卓越烹飪美味的潛力。在這個指南中，我們邀請您加入我們，探索關鍵的技巧和技巧，這將讓您能夠創造出塔皮，這是您烹飪技藝的證明。</p><h4>選用冷藏材料：</h4><p>使用冷藏的材料，尤其是牛油，是實現鬆軟、酥脆塔皮的關鍵。冷藏的牛油在烘焙過程中會釋放蒸汽，使得塔皮質地更輕盈。請確保您的牛油是從冰箱拿出來的，並將其切成小丁再加入麵糰中。</p><h4>溫柔手工處理麵糰：</h4><p>過度揉捏麵糰會導致塔皮變得硬而緊密。盡量少碰麵糰，不要過度揉捏。僅需輕輕揉捏麵糰使其結合即可。記住，目標是製作出嫩滑而細膩的底部。</p><h4>充分冷藏：</h4><p>在形成麵糰後，將其休息並放入冰箱冷藏是非常重要的。這一步能讓麵糰的筋力得到放鬆，牛油變得更硬，使得麵糰更易處理，塔皮更鬆脆。在擠壓麵糰前，請至少冷藏 30 分鐘。</p><h4>適度撒粉：</h4><p>在擠壓麵糰時，只需使用足夠的麵粉防止黏附即可。過多的麵粉會使麵糰變得更硬，所以要輕手輕腳，麵糰表面輕輕撒上一層薄麵粉。您也可以使用矽膠烘焙墊或烘焙紙防止黏附而不需過多麵粉。</p><h4>盲烤獲得酥脆口感：</h4><p>對於某些撻食譜，盲烤底部是必要的，以確保它保持酥脆，尤其是在使用濕潤餡料時。進行盲烤時，請在餡料上蓋上烘焙紙或錫箔紙，填滿派餡料或乾豆，烘烤至淡金黃色。這一步可以在塔皮和餡料之間形成屏障，防止變得濕潤。</p><h4>嘗試不同的口味：</h4><p>不要害怕在塔皮底中添加創意！考慮加入一點香草提取物、柑橘皮屑或香料如肉桂或肉荳蔻，增添口味的深度。嘗試使用不同的麵粉，如全麥麵粉或杏仁粉，也可以獲得獨特而美味的效果。</p><h4>忍耐等待：</h4><p>耐心是實現塔皮完美的關鍵。在添加任何餡料之前，請讓烘焙好的塔皮完全冷卻。這確保塔皮保持酥脆的質地，不會因餡料的潮濕而變得潮濕。</p><p>有了這些技巧，您就有了成功製作完美塔皮底的利器。從冷藏材料開始，溫柔處理麵糰，掌握冷藏和盲烤的技巧，您將能夠輕鬆打造出完美的塔皮底。所以，動手準備吧，充分發揮創意，準備好讓您的味蕾每次都感動不已，享受到完美塔皮底的美味！</p>',
       };
       console.log(blog);
       // const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/article`;
@@ -290,7 +300,8 @@ export default {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
     axios.defaults.headers.common.Authorization = token;
 
-    this.getArticle();
+    this.getArticles();
+    // this.createArticle();
 
     articleModal = new bootstrap.Modal(document.getElementById('productModal'));
     delArticleModal = new bootstrap.Modal(document.getElementById('delProductModal'));

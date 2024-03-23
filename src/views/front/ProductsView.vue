@@ -4,9 +4,11 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Library</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Data</li>
+        <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
+        <li class="breadcrumb-item"><RouterLink to="/products">Desserts</RouterLink></li>
+        <li class="breadcrumb-item active text-primary" aria-current="page">
+          {{ $route.query.category }}
+        </li>
       </ol>
     </nav>
 
