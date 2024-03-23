@@ -10,47 +10,88 @@
       </ol>
     </nav>
 
-    <!-- dropdown -->
-    <div class="dropdown">
-      <label for="category"></label>
-      <select name="" id="category" class="form-select border-primary">
-        <option selected>Category</option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-        <option value=""></option>
-      </select>
-    </div>
+    <div class="row row-cols-2">
+      <!-- sidebar -->
+      <div class="col-3 category">
+        <div class="accordion border border-bottom border-top-0 border-start-0 border-end-0 mb-3"
+        id="accordionExample">
+          <div class="card border-0">
+            <div class="card-header px-0 py-4 bg-white
+            border border-bottom-0 border-top border-start-0 border-end-0 rounded-0"
+              id="headingOne" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+              <div class="d-flex justify-content-between align-items-center pe-1">
+                <h4 class="mb-0">
+                  Category
+                </h4>
+              </div>
+            </div>
+            <div>
+              <div>
+                <ul class="list-unstyled">
+                  <li>
+                    <RouterLink to="/products"
+                    class="py-2 d-block text-muted">全部</RouterLink>
+                  </li>
+                  <li v-for="category in categories" :key="category">
+                    <RouterLink :to="`/products?category=${category}`"
+                    class="py-2 d-block text-muted">{{ category }}</RouterLink>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- product list -->
-    <div class="product-list">
-      <div class="product-card border-cus-cream"
-        v-for="item in products" :key="item.id">
-        <img :src="item.imageUrl" alt="product-img">
-        <RouterLink :to="`/product/${item.id}`">
-          <h3>{{ item.title }}</h3>
-        </RouterLink>
-        <span>${{ item.price }}</span>
+      <div class="col-9">
+        <!-- dropdown -->
+        <!-- <div class="dropdown">
+          <label for="category"></label>
+          <select name="" id="category" class="form-select border-primary">
+            <option selected>Category</option>
+            <option value=""></option>
+            <option value=""></option>
+            <option value=""></option>
+            <option value=""></option>
+          </select>
+        </div> -->
+
+        <!-- loading -->
+        <div class="loading" v-show="status.productsLoading">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+
+        <!-- product list -->
+        <div class="product-list">
+          <div class="product-card border-cus-cream"
+            v-for="item in products" :key="item.id">
+            <img :src="item.imageUrl" alt="product-img">
+            <RouterLink :to="`/product/${item.id}`">
+              <h3>{{ item.title }}</h3>
+            </RouterLink>
+            <span>${{ item.price }}</span>
+          </div>
+        </div>
+        <!-- pagination -->
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: !pages.has_pre}">
+              <a class="page-link" href="#" @click.prevent="getData(pages.current_page - 1)">
+                Previous</a>
+            </li>
+            <li class="page-item" :class="{
+                active: page === pages.current_page
+              }" v-for="page in pages.total_pages" :key="page + 123">
+              <a class="page-link" href="#" @click.prevent="getData(page)">{{ page }}</a>
+            </li>
+            <li class="page-item" :class="{ disabled: !pages.has_next}">
+              <a class="page-link" href="#" @click.prevent="getData(pages.current_page + 1)">
+                Next</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
-
-    <!-- pagination -->
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" :class="{ disabled: !pages.has_pre}">
-          <a class="page-link" href="#" @click.prevent="getData(pages.current_page - 1)">
-            Previous</a>
-        </li>
-        <li class="page-item" :class="{
-            active: page === pages.current_page
-          }" v-for="page in pages.total_pages" :key="page + 123">
-          <a class="page-link" href="#" @click.prevent="getData(page)">{{ page }}</a>
-        </li>
-        <li class="page-item" :class="{ disabled: !pages.has_next}">
-          <a class="page-link" href="#" @click.prevent="getData(pages.current_page + 1)">Next</a>
-        </li>
-      </ul>
-    </nav>
   </div>
   <RouterView></RouterView>
 </template>
@@ -66,24 +107,34 @@ export default {
       products: [],
       temp: {},
       pages: {},
+      categories: ['蛋糕', '起司蛋糕', '派 / 塔', '麵包', '其他'],
+      status: {
+        productsLoading: false,
+      },
     };
+  },
+  watch: {
+    '$route.query': {
+      handler() {
+        this.getData(); // $route.query 值有變化的時候，重新取值
+      },
+      deep: true, // 深層監聽
+    },
   },
   methods: {
     getData(page = 1) {
-      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/products?page=${page}`;
+      const { category = '' } = this.$route.query; // category 必須預設為空值，否則會是 undefined
+      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/products?category=${category}&page=${page}`;
+      this.status.productsLoading = true;
       axios.get(url)
-        // 成功後顯示將 response.data.products 存到定義好的 products 陣列中，使 products.html 取值
         .then((response) => {
+          this.status.productsLoading = false;
           this.products = response.data.products;
           this.pages = response.data.pagination;
         })
         .catch((err) => {
-        // 失敗顯示預設的錯誤訊息
           alert(err.response.data.message);
         });
-    },
-    openProduct(item) {
-      this.temp = item;
     },
   },
   mounted() {
@@ -108,15 +159,37 @@ export default {
   margin-block: 1.5em;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .spinner-border {
+    margin: 3em;
+    width: 5em;
+    height: 5em;
+    --bs-spinner-border-width: 10px;
+  }
+}
+
+.category {
+  a {
+    text-decoration: none;
+  }
+}
+
 .form-select {
   display: inline;
   width: 8em;
 }
 
+.dropdown {
+  margin-bottom: 2em;
+}
+
 .product-list {
-  margin-block: 3em;
+  margin-bottom: 3em;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5em;
 }
 

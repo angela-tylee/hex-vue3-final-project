@@ -22,21 +22,40 @@
               <!-- <td :style="{backgroundImage: `url(${cart.product.imageUrl})`}"
               style="height: 100 px; width: 100px"></td> -->
               <td><img :src="cart.product.imageUrl" alt="" style="width: 100%"></td>
-              <td>{{ cart.product.title }}</td>
-              <td class="text-end">${{ cart.product.price }}</td>
+              <td>
+                <RouterLink :to="`/product/${cart.product.id}`">
+                  <span>{{ cart.product.title }}</span>
+                </RouterLink>
+              </td>
+                <td class="text-end">${{ cart.product.price }}</td>
               <td class="text-center">
                 <div class="input-group">
-                  <button class="btn btn-outline-secondary" type="button"> - </button>
-                    <input type="number" class="form-control text-center" v-model="cart.qty">
-                  <button class="btn btn-outline-secondary" type="button"> + </button>
+                  <button type="button" class="btn btn-outline-secondary"
+                  @click="cart.qty--; changeCartQty(cart, cart.qty)"
+                  :disabled="cart.qty===1"> - </button>
+                    <input type="number" class="form-control text-center"
+                    v-model="cart.qty" readonly>
+                  <button type="button" class="btn btn-outline-secondary"
+                  @click="cart.qty++; changeCartQty(cart, cart.qty)"> + </button>
                 </div>
               </td>
               <td class="text-end">${{ cart.total }}</td>
-              <td class="text-center" style="font-size: 1.5em"><i class="bi bi-x"></i></td>
+              <td class="text-center" style="font-size: 1.5em">
+                <button type="button"
+                style="border: none; border-radius: 100%; background-color: transparent">
+                  <i class="bi bi-x" @click="removeCartItem(cart.id)"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
-        <button type="button" class="btn btn-primary text-cus-cream">清空購物車</button>
+        <!-- loading -->
+        <div class="loading" v-show="status.cartLoading">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <!-- <p class="text-center" v-if="carts.carts.length === 0">您的購物車沒有東西。</p> -->
+        <button type="button" class="btn btn-primary text-cus-cream"
+        @click="removeCartItemAll">清空購物車</button>
       </div>
       <div class="grid-card order-info bg-primary">
         <div class="order-info-content">
@@ -91,6 +110,7 @@ export default {
       status: {
         addCartLoading: '',
         cartQtyLoading: '',
+        cartLoading: false,
       },
       form: {
         user: {
@@ -104,49 +124,50 @@ export default {
     };
   },
   methods: {
-    // changeCartQty(item, qty = 1) {
-    //   const order = {
-    //     product_id: item.product.id,
-    //     qty,
-    //   };
-    //   this.status.cartQtyLoading = item.id;
-    //   axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
-    //     .then((response) => {
-    //       this.status.cartQtyLoading = '';
-    //       this.getCart();
-    //     })
-    //     .catch((error) => {
-    //       alert(error.response.data.message);
-    //     });
-    // },
-    // removeCartItem(id) {
-    //   this.status.cartQtyLoading = id;
-    //   axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${id}`)
-    //     .then((response) => {
-    //       this.status.cartQtyLoading = '';
-    //       this.getCart();
-    //     })
-    //     .catch((error) => {
-    //       alert(error.response.data.message);
-    //     });
-    // },
-    // removeCartItemAll() {
-    //   axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/carts`)
-    //     .then((response) => {
-    //       this.getCart();
-    //     })
-    //     .catch((error) => {
-    //       alert(error.response.data.message);
-    //     });
-    // },
+    changeCartQty(item, qty = 1) {
+      const order = {
+        product_id: item.product.id,
+        qty,
+      };
+      axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
+        .then(() => {
+          this.getCart();
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        });
+    },
+    removeCartItem(id) {
+      this.status.cartQtyLoading = id;
+      axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${id}`)
+        .then(() => {
+          this.status.cartQtyLoading = '';
+          this.getCart();
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        });
+    },
+    removeCartItemAll() {
+      axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/carts`)
+        .then(() => {
+          this.getCart();
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        });
+    },
     getCart() {
+      this.status.cartLoading = true;
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
         .then((response) => {
+          this.status.cartLoading = false;
           console.log(response);
           this.carts = response.data.data;
         })
         .catch((error) => {
           alert(error.response.data.message);
+          this.status.productsLoading = false;
         });
     },
     // createOrder() {
@@ -191,11 +212,26 @@ export default {
   .table {
     margin-top: 2em;
     background-color: transparent;
+    a {
+      text-decoration: none;
+    }
   }
   .grid-card {
     padding: 3em;
     padding-bottom: 5em;
     border-radius: 10px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .spinner-border {
+    margin: 3em;
+    width: 5em;
+    height: 5em;
+    --bs-spinner-border-width: 10px;
   }
 }
 

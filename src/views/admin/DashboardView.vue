@@ -6,6 +6,7 @@
       <ul>
         <li><RouterLink to="/admin/products" class="text-cus-cream">產品列表</RouterLink></li>
         <li><RouterLink to="/admin/orders" class="text-cus-cream">訂單列表</RouterLink></li>
+        <li><RouterLink to="/admin/blogs" class="text-cus-cream">文章列表</RouterLink></li>
         <li><RouterLink to="/" class="text-cus-cream">回到前台</RouterLink></li>
       </ul>
   </aside>
@@ -39,9 +40,6 @@ export default {
           // window.location = 'log-in.html';
           this.$router.push('/log-in');
         });
-    },
-    openProduct(item) {
-      this.temp = item;
     },
   },
   mounted() {

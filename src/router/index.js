@@ -31,7 +31,7 @@ const routes = [
         component: () => import('../views/front/BlogsView.vue'),
       },
       {
-        path: 'blog',
+        path: 'blog/:id',
         name: 'blog',
         component: () => import('../views/front/BlogView.vue'),
       },
@@ -71,6 +71,11 @@ const routes = [
         path: 'orders',
         name: 'Orders',
         component: () => import('../views/admin/OrdersView.vue'),
+      },
+      {
+        path: 'blogs',
+        name: 'blogs',
+        component: () => import('../views/admin/BlogsView.vue'),
       },
     ],
   },

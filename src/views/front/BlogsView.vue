@@ -2,39 +2,53 @@
   <div class="container">
     <h1 class="border-primary">Blog</h1>
     <div class="blog-list">
-      <div class="blog-card border-cus-cream">
+      <div class="blog-card border-cus-cream"
+        v-for="blog in blogs" :key="blog.id">
         <div class="blog-card-content">
-          <RouterLink to="/blog">
-            <h3>Blog Title</h3>
+          <RouterLink :to="`/blog/${blog.id}`">
+            <h3>{{ blog.title }}</h3>
           </RouterLink>
-          <p></p>
+          <p>{{ blog.description }}</p>
         </div>
-        <img src="" alt="blog-img">
-      </div>
-      <div class="blog-card border-cus-cream">
-        <div class="blog-card-content">
-          <RouterLink to="">
-            <h3>Blog Title</h3>
-          </RouterLink>
-          <p></p>
-        </div>
-        <img src="" alt="blog-img">
-      </div>
-      <div class="blog-card border-cus-cream">
-        <div class="blog-card-content">
-          <RouterLink to="">
-            <h3>Blog Title</h3>
-          </RouterLink>
-          <p></p>
-        </div>
-        <img src="" alt="blog-img">
+        <img :src="blog.image" alt="blog-img">
       </div>
     </div>
   </div>
   <RouterView></RouterView>
 </template>
 
-<script></script>
+<script>
+import axios from 'axios';
+
+const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
+
+export default {
+  data() {
+    return {
+      blogs: [],
+    };
+  },
+  methods: {
+    getArticle() {
+      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/articles`;
+      axios.get(url)
+        .then((response) => {
+          console.log(response.data.articles);
+          this.blogs = response.data.articles;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+  },
+  mounted() {
+    this.getArticle();
+
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    axios.defaults.headers.common.Authorization = token;
+  },
+};
+</script>
 
 <style scoped>
 

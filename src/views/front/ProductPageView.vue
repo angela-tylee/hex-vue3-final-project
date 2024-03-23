@@ -21,11 +21,21 @@
         </div>
         <div>
           <div class="quantity-block">
+            <!-- <div class="input-group">
+              <button class="btn btn-outline-secondary" type="button"
+              @click="value--" :disabled="value===1"> - </button>
+              <input type="number" class="form-control text-center"
+              value="1" readonly>
+              <button class="btn btn-outline-secondary" type="button"
+              @click="value++"> + </button>
+            </div> -->
             <div class="input-group">
-              <button class="btn btn-outline-secondary" type="button"> - </button>
-              <input type="text" class="form-control"
-                aria-label="Text input with 2 dropdown buttons">
-              <button class="btn btn-outline-secondary" type="button"> + </button>
+              <button class="btn btn-outline-secondary" type="button"
+              @click="qty--; changeQty(qty)" :disabled="qty === 1"> - </button>
+                <input type="number" class="form-control text-center"
+                value="1" v-model="qty" readonly>
+              <button class="btn btn-outline-secondary" type="button"
+              @click="qty++; changeQty(qty)"> + </button>
             </div>
             <span class="price">
               <del class="small"
@@ -34,10 +44,13 @@
             </span>
           </div>
           <button type="button" class="btn btn-primary add-to-cart"
-            @click.prevent="addToCart"
+            @click.prevent="addToCart(product, qty)"
             :disabled="product.id === status.addCartLoading">
-            <i v-if="product.id === status.addCartLoading" class="fas fa-spinner fa-pulse"></i>
-            Add to Cart
+            <i
+            class="spinner-border text-white"
+            v-if="product.id === status.addCartLoading"
+            style="width: 1.2em; height: 1.2em" role="status"></i>
+            <span class="text-white">Add to Cart</span>
           </button>
         </div>
       </div>
@@ -55,9 +68,11 @@ export default {
   data() {
     return {
       product: {},
+      cart: {},
       status: {
         addCartLoading: '',
       },
+      qty: 1,
     };
   },
   methods: {
@@ -66,26 +81,29 @@ export default {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/product/${id}`;
       axios.get(url)
         .then((response) => {
+          console.log(response.data.product);
           this.product = response.data.product;
         })
         .catch((err) => {
           alert(err.response.data.message);
         });
     },
-    addToCart() {
+    addToCart(product, qty = 1) {
       const order = {
-        product_id: this.product.id,
-        qty: 1,
+        product_id: product.id,
+        qty,
       };
       this.status.addCartLoading = order.product_id;
       axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           this.status.addCartLoading = '';
         })
         .catch((error) => {
           alert(error.response.data.message);
         });
+    },
+    changeQty(num) {
+      this.qty = num;
     },
   },
   mounted() {
@@ -133,6 +151,9 @@ nav {
 
 .add-to-cart {
   width: 100%;
+  span {
+    margin-left: 1em;
+  }
 }
 
 </style>
