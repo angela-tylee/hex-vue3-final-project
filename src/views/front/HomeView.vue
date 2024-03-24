@@ -291,7 +291,7 @@ export default {
   .intro-block {
     grid-template-columns: 1fr;
     gap: 2em;
-    .img-container {
+    .intro-img-container {
       grid-row: 2;
     }
   }
