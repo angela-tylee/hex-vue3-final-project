@@ -1,6 +1,13 @@
 <template>
   <div class="container">
     <h1 class="border-primary">Blog</h1>
+
+      <!-- loading -->
+      <div class="loading" v-if="status.blogsLoading">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <!-- blog list -->
     <div class="blog-list">
       <div class="blog-card border-cus-cream"
         v-for="blog in blogs" :key="blog.id">
@@ -10,7 +17,9 @@
           </RouterLink>
           <p>{{ blog.description }}</p>
         </div>
-        <img :src="blog.image" alt="blog-img">
+        <div class="blog-card-img">
+          <img :src="blog.image" alt="blog-img">
+        </div>
       </div>
     </div>
   </div>
@@ -26,17 +35,23 @@ export default {
   data() {
     return {
       blogs: [],
+      status: {
+        blogsLoading: false,
+      },
     };
   },
   methods: {
     getArticle() {
+      this.status.blogsLoading = true;
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/articles`;
       axios.get(url)
         .then((response) => {
+          this.status.blogsLoading = false;
           console.log(response.data.articles);
           this.blogs = response.data.articles;
         })
         .catch((err) => {
+          this.status.blogsLoading = false;
           alert(err.response.data.message);
         });
     },
@@ -69,18 +84,48 @@ h1 {
 
 .blog-card {
   margin-top: 2em;
-  padding: 0.5em 2em;
   border: solid 1px;
   border-radius: 6px;
-  h3 {
-    margin-top: 1em;
-    font-size: 1.2rem;
+  height: 200px;
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  .blog-card-content {
+    padding: 0.5em 1em;
+    overflow: hidden;
+    h3 {
+      margin-top: 1em;
+      font-size: 1.2rem;
+    }
+    a {
+      text-decoration: none;
+    }
   }
-  img {
-    width: 100%;
-  }
-  a {
-    text-decoration: none;
+
+  .blog-card-img {
+    overflow: hidden;
+    img {
+      width: 120%;
+      object-fit: cover;
+    }
   }
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .spinner-border {
+    margin: 3em;
+    width: 5em;
+    height: 5em;
+    --bs-spinner-border-width: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-card-img {
+    height: 100%;
+  }
+}
+
 </style>

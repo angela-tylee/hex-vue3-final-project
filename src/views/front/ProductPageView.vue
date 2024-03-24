@@ -3,13 +3,13 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Library</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Data</li>
+        <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
+        <li class="breadcrumb-item"><RouterLink to="/products">Desserts</RouterLink></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
       </ol>
     </nav>
     <div class="product-grid">
-      <div class="product-img">
+      <div class="product-img img-container">
         <img :src="product.imageUrl" alt="product-img">
       </div>
       <div class="product-content">
@@ -126,15 +126,19 @@ nav {
   p {
     margin-top: 1em;
   }
-  .product-img img{
+  .img-container {
     width: 100%;
+    height: 800px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 
 .product-content {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
   .quantity-block {
     margin-block: 4em 1em;
     display: flex;
@@ -156,4 +160,26 @@ nav {
   }
 }
 
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  .img-container {
+  height: 50%;
+}
+
+}
+
+@media (max-width: 768px) {
+  .img-container {
+    grid-row: 2;
+    height: 500px;
+  }
+}
+
+@media (max-width: 576px) {
+  .img-container {
+    height: 400px;
+  }
+}
 </style>

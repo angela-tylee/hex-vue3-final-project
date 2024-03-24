@@ -12,9 +12,9 @@
       </ol>
     </nav>
 
-    <div class="row row-cols-2">
+    <div class="products-grid">
       <!-- sidebar -->
-      <div class="col-3 category">
+      <div class="category">
         <div class="accordion border border-bottom border-top-0 border-start-0 border-end-0 mb-3"
         id="accordionExample">
           <div class="card border-0">
@@ -29,7 +29,7 @@
             </div>
             <div>
               <div>
-                <ul class="list-unstyled">
+                <ul class="category-list list-unstyled">
                   <li>
                     <RouterLink to="/products"
                     class="py-2 d-block text-muted">全部</RouterLink>
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="col-9">
+      <div>
         <!-- dropdown -->
         <!-- <div class="dropdown">
           <label for="category"></label>
@@ -67,11 +67,13 @@
         <div class="product-list">
           <div class="product-card border-cus-cream"
             v-for="item in products" :key="item.id">
-            <img :src="item.imageUrl" alt="product-img">
-            <RouterLink :to="`/product/${item.id}`">
-              <h3>{{ item.title }}</h3>
-            </RouterLink>
-            <span>${{ item.price }}</span>
+            <div class="img-container">
+              <img :src="item.imageUrl" alt="product-img">
+            </div>
+            <div class="product-content">
+              <h3><RouterLink :to="`/product/${item.id}`">{{ item.title }}</RouterLink></h3>
+              <span>${{ item.price }}</span>
+            </div>
           </div>
         </div>
         <!-- pagination -->
@@ -188,6 +190,11 @@ export default {
   margin-bottom: 2em;
 }
 
+.products-grid {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+}
+
 .product-list {
   margin-bottom: 3em;
   display: grid;
@@ -196,15 +203,29 @@ export default {
 }
 
 .product-card {
+  height: 390px;
   padding: 0.5em;
   border: solid 1px;
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   h3 {
     margin-top: 1em;
     font-size: 1.2rem;
   }
-  img {
+  .img-container {
     width: 100%;
+    height: 75%;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .product-content {
+    margin: 0.5em;
   }
   a {
     text-decoration: none;
@@ -214,6 +235,32 @@ export default {
 .pagination {
   display: flex;
   justify-content: center;
+}
+/* breakpoints: 375px,  576px, 768px, 1024px, 1440px, 1920px*/
+@media (max-width: 1024px){
+  .products-grid {
+    grid-template-columns: 1fr;
+    .category-list {
+      display: flex;
+      justify-content: space-around;
+    }
+  }
+}
+
+@media (max-width: 768px){
+  .products-grid {
+    .product-list{
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 576px){
+  .products-grid {
+    .product-list{
+      grid-template-columns: 1fr;
+    }
+  }
 }
 
 </style>

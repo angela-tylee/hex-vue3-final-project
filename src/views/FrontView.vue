@@ -3,27 +3,59 @@
     <div>
       <header class="bg-primary">
         <span class="logo">
-          <RouterLink to="/"><img src="../../public/logo/logo-cream.png" alt="logo"></RouterLink>
+          <RouterLink to="/"
+            ><img src="../../public/logo/logo-cream.png" alt="logo"
+          /></RouterLink>
         </span>
-        <nav class="nav-bar">
-          <ul>
-            <li><RouterLink to="/" class="text-cus-cream text-decoration-none">
-              Home</RouterLink></li>
-            <li><RouterLink to="/products" class="text-cus-cream text-decoration-none">
-              Desserts</RouterLink></li>
-            <li><RouterLink to="/blogs" class="text-cus-cream text-decoration-none">
-              Blog</RouterLink></li>
-            <li><RouterLink to="/about" class="text-cus-cream text-decoration-none">
-              Our Story</RouterLink></li>
+        <nav class="nav-bar" :class="{ active: isMenuOpen }">
+          <ul class="nav-list">
+            <li>
+              <RouterLink to="/" class="text-cus-cream text-decoration-none">
+                Home</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/products"
+                class="text-cus-cream text-decoration-none"
+              >
+                Desserts</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/blogs"
+                class="text-cus-cream text-decoration-none"
+              >
+                Blog</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/about"
+                class="text-cus-cream text-decoration-none"
+              >
+                Our Story</RouterLink
+              >
+            </li>
           </ul>
           <ul>
             <li>
-            <RouterLink to="/cart" class="text-cus-cream text-decoration-none">
-              <i class="bi bi-cart-fill text-cus-cream" style="font-size: 20px"></i>
-            </RouterLink>
+              <RouterLink
+                to="/cart"
+                class="text-cus-cream text-decoration-none"
+              >
+                <i
+                  class="bi bi-cart-fill text-cus-cream"
+                  style="font-size: 20px"
+                ></i>
+              </RouterLink>
             </li>
           </ul>
         </nav>
+        <div class="mobile-menu" @click.prevent="openMenu">
+          <i class="bi bi-list text-cus-cream"></i>
+        </div>
       </header>
       <RouterView></RouterView>
     </div>
@@ -31,18 +63,39 @@
       <div class="container footer-content text-cus-cream">
         <div class="footer-nav">
           <RouterLink to="/log-in" class="text-cus-cream text-decoration-none">
-            登入後台 | </RouterLink>
-          <RouterLink to="/admin/products" class="text-cus-cream text-decoration-none">
-            後台頁面</RouterLink>
+            登入後台 |
+          </RouterLink>
+          <RouterLink
+            to="/admin/products"
+            class="text-cus-cream text-decoration-none"
+          >
+            後台頁面</RouterLink
+          >
         </div>
         <span class="text-cus-cream">copyright@angelalee</span>
         <p class="text-cus-cream">僅供學習使用，非商業用途</p>
       </div>
-  </footer>
+    </footer>
   </div>
 </template>
 
-<script></script>
+<script>
+// const menuBtn = document.querySelector('.menuToggle');
+// menuBtn.addEventListener('click', openMenu);
+
+export default {
+  data() {
+    return {
+      isMenuOpen: false,
+    };
+  },
+  methods: {
+    openMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+  },
+};
+</script>
 
 <style>
 .wrapper {
@@ -59,7 +112,7 @@ header {
   nav {
     width: 100%;
     margin-inline: 2em;
-    ul{
+    ul {
       list-style: none;
       display: flex;
       justify-content: flex-start;
@@ -83,6 +136,19 @@ header {
   margin: 0;
 }
 
+.menuToggle {
+  display: none;
+  cursor: pointer;
+}
+
+.bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+}
+
 footer {
   margin-top: 2em;
   padding-block: 2em;
@@ -95,4 +161,66 @@ footer {
   }
 }
 
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 576px) {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mobile-menu {
+    display: block;
+    cursor: pointer;
+    i {
+      font-size: 30px;
+    }
+  }
+
+  .nav-bar {
+    display: none; /* Initially hide the nav-bar */
+    background-color: var(--bs-primary);
+    position: absolute;
+    padding-bottom: 2em;
+    top: 115px;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .nav-bar.active {
+    /* Show the nav-bar when active */
+    display: block flex;
+    flex-direction: column;
+    align-items: center;
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+</style>
+
+<style scoped>
+.nav-bar {
+  a {
+    border-bottom: transparent;
+    width: 0;
+    transition: all 0.2s;
+  }
+
+  a:hover {
+    border-bottom: solid 2px var(--bs-cus-cream);
+    width: 100%;
+  }
+}
 </style>

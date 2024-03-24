@@ -21,14 +21,16 @@
                 class="cart-img" ></td> -->
               <!-- <td :style="{backgroundImage: `url(${cart.product.imageUrl})`}"
               style="height: 100 px; width: 100px"></td> -->
-              <td><img :src="cart.product.imageUrl" alt="" style="width: 100%"></td>
-              <td>
+              <td class="table-img">
+                <img :src="cart.product.imageUrl" alt="" style="width: 100%">
+              </td>
+              <td class="table-item">
                 <RouterLink :to="`/product/${cart.product.id}`">
                   <span>{{ cart.product.title }}</span>
                 </RouterLink>
               </td>
-                <td class="text-end">${{ cart.product.price }}</td>
-              <td class="text-center">
+              <td class="table-price text-end">${{ cart.product.price }}</td>
+              <td class="table-qty text-center">
                 <div class="input-group">
                   <button type="button" class="btn btn-outline-secondary"
                   @click="cart.qty--; changeCartQty(cart, cart.qty)"
@@ -39,8 +41,8 @@
                   @click="cart.qty++; changeCartQty(cart, cart.qty)"> + </button>
                 </div>
               </td>
-              <td class="text-end">${{ cart.total }}</td>
-              <td class="text-center" style="font-size: 1.5em">
+              <td class="table-final-price text-end"><span>${{ cart.total }}</span></td>
+              <td class="table-delete-btn text-center" style="font-size: 1.5em">
                 <button type="button"
                 style="border: none; border-radius: 100%; background-color: transparent">
                   <i class="bi bi-x" @click="removeCartItem(cart.id)"></i>
@@ -62,12 +64,10 @@
         </i>
         清空購物車</button>
       </div>
-      <div class="grid-card order-info bg-primary">
-        <div class="order-info-content">
-          <h2 class="text-cus-cream">Order Info</h2>
+      <div class="grid-card order-summary bg-primary">
+        <div class="order-summary-content">
+          <h2 class="text-cus-cream">Order Summary</h2>
           <div class="row row-cols-2">
-            <div class="col-6 mt-4 text-cus-cream">Total Quantity:</div>
-            <div class="col-6 mt-4 text-cus-cream text-end"></div>
             <div class="col-6 mt-4 text-cus-cream">Subtotal:</div>
             <div class="col-6 mt-4 text-cus-cream text-end">$ {{ carts.total }}</div>
             <div class="col-12 mt-4 text-cus-cream input-group">
@@ -172,7 +172,7 @@ export default {
         })
         .catch((error) => {
           alert(error.response.data.message);
-          this.status.productsLoading = false;
+          this.status.cartLoading = false;
         });
     },
     applyCoupon(couponCode) {
@@ -260,10 +260,51 @@ export default {
   width: 10%;
 }
 
-.order-info {
+.order-summary {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    .grid-card {
+      padding: 3em;
+      padding-bottom: 5em;
+      border-radius: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+        border: none;
+        text-align: center;
+    }
+    thead tr {
+      display: none;
+    }
+
+    .table-img {
+      height: 400px;
+      overflow: hidden;
+      margin-block: 1em;
+      img {
+        object-fit: cover;
+      }
+    }
+
+    .table-item,
+    .table-price {
+      display: inline;
+    }
+
+    .table-final-price,
+    .table-delete-btn {
+      display: none;
+    }
 }
 
 </style>
