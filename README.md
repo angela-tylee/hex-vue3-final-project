@@ -16,8 +16,11 @@
 ## Overview
 
 ### Screenshot
-![[Screenshot 2024-03-24 at 10.28.31 PM.png]]
-![[Screenshot 2024-03-24 at 10.29.14 PM.png]]
+
+<img width="497" alt="Screenshot 2024-03-24 at 10 28 31 PM" src="https://github.com/angela-tylee/hex-vue3-final-project/assets/145020731/46df4696-e24d-4708-aafb-d37ff91c665c">
+
+<img width="493" alt="Screenshot 2024-03-24 at 10 29 14 PM" src="https://github.com/angela-tylee/hex-vue3-final-project/assets/145020731/ee2b05bc-b523-45c6-9db3-a79270bbe149">
+
 
 ### Links
 
