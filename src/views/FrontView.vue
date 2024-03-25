@@ -10,7 +10,11 @@
         <nav class="nav-bar" :class="{ active: isMenuOpen }">
           <ul class="nav-list">
             <li>
-              <RouterLink to="/" class="text-cus-cream text-decoration-none">
+              <RouterLink
+                to="/"
+                class="text-cus-cream text-decoration-none"
+                @click.prevent="toggleMenu"
+              >
                 Home</RouterLink
               >
             </li>
@@ -18,6 +22,7 @@
               <RouterLink
                 to="/products"
                 class="text-cus-cream text-decoration-none"
+                @click.prevent="toggleMenu"
               >
                 Desserts</RouterLink
               >
@@ -26,6 +31,7 @@
               <RouterLink
                 to="/blogs"
                 class="text-cus-cream text-decoration-none"
+                @click.prevent="toggleMenu"
               >
                 Blog</RouterLink
               >
@@ -34,6 +40,7 @@
               <RouterLink
                 to="/about"
                 class="text-cus-cream text-decoration-none"
+                @click.prevent="toggleMenu"
               >
                 Our Story</RouterLink
               >
@@ -44,6 +51,7 @@
               <RouterLink
                 to="/cart"
                 class="text-cus-cream text-decoration-none"
+                @click.prevent="toggleMenu"
               >
                 <i
                   class="bi bi-cart-fill text-cus-cream"
@@ -53,7 +61,7 @@
             </li>
           </ul>
         </nav>
-        <div class="mobile-menu" @click.prevent="openMenu">
+        <div class="mobile-menu" @click.prevent="toggleMenu">
           <i class="bi bi-list text-cus-cream"></i>
         </div>
       </header>
@@ -80,9 +88,6 @@
 </template>
 
 <script>
-// const menuBtn = document.querySelector('.menuToggle');
-// menuBtn.addEventListener('click', openMenu);
-
 export default {
   data() {
     return {
@@ -90,7 +95,7 @@ export default {
     };
   },
   methods: {
-    openMenu() {
+    toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
   },
@@ -165,7 +170,7 @@ footer {
   display: none;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 590px) {
   header {
     display: flex;
     justify-content: space-between;
