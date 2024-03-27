@@ -65,10 +65,10 @@
                 </div>
               </div>
               <div class="col-6 mt-4">Subtotal</div>
-              <div class="col-6 mt-4 text-end"> $ {{ carts.final_total }}</div>
+              <div class="col-6 mt-4 text-end"> $ {{ carts.total }}</div>
               <div class="col-6 mt-4 fs-5 fw-semibold">Total:</div>
               <div class="col-6 mt-4 text-end fs-5 fw-semibold">
-                $ {{ carts.total }} </div>
+                $ {{ carts.final_total }} </div>
             </div>
           </div>
         </div>

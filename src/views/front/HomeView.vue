@@ -81,7 +81,9 @@
             <div class="img-container">
               <img :src="product.imageUrl" alt="product-img" />
             </div>
-            <h5>{{ product.title }}</h5>
+              <h5>
+                <RouterLink :to="`/product/${product.id}`">{{ product.title }}</RouterLink>
+              </h5>
           </div>
         </div>
       </div>
@@ -92,21 +94,25 @@
             <div class="img-container">
               <img :src="product.imageUrl" alt="product-img" />
             </div>
-            <h5>{{ product.title }}</h5>
+              <h5>
+                <RouterLink :to="`/product/${product.id}`">{{ product.title }}</RouterLink>
+              </h5>
           </div>
         </div>
       </div>
     </div>
     <div class="blog homepage-block">
       <h2 class="text-center block-title">
-        <span>Explore our blog</span>
+        <RouterLink to="/blogs"><span>Explore our blog</span></RouterLink>
       </h2>
       <div class="blog-cards">
         <div v-for="article in filteredBlog" :key="article.id">
           <div class="img-container">
             <img :src="article.image" alt="blog-img" />
           </div>
-          <h5>{{ article.title }}</h5>
+          <h5>
+            <RouterLink :to="`/blog/${article.id}`">{{ article.title }}</RouterLink>
+          </h5>
         </div>
       </div>
     </div>
@@ -182,6 +188,11 @@ export default {
 </script>
 
 <style scoped>
+
+a {
+  text-decoration: none;
+}
+
 .homepage-block {
   margin-top: 5em;
 }

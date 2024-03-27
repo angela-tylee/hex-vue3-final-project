@@ -165,21 +165,13 @@ nav {
     grid-template-columns: 1fr;
   }
   .img-container {
-  height: 50%;
-}
-
+    height: 50%;
+  }
 }
 
 @media (max-width: 768px) {
   .img-container {
     grid-row: 2;
-    height: 500px;
-  }
-}
-
-@media (max-width: 576px) {
-  .img-container {
-    height: 400px;
   }
 }
 </style>
