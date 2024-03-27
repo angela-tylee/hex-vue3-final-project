@@ -2,15 +2,18 @@
   <div class="container">
     <h1 class="border-primary">Blog</h1>
 
-      <!-- loading -->
-      <div class="loading" v-if="status.blogsLoading">
-        <div class="spinner-border text-primary" role="status"></div>
-      </div>
+    <!-- loading -->
+    <div class="loading" v-if="status.blogsLoading">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
 
-      <!-- blog list -->
+    <!-- blog list -->
     <div class="blog-list">
-      <div class="blog-card border-cus-cream"
-        v-for="blog in blogs" :key="blog.id">
+      <div
+        class="blog-card border-cus-cream"
+        v-for="blog in blogs"
+        :key="blog.id"
+      >
         <div class="blog-card-content">
           <RouterLink :to="`/blog/${blog.id}`">
             <h3>{{ blog.title }}</h3>
@@ -18,7 +21,7 @@
           <p>{{ blog.description }}</p>
         </div>
         <div class="blog-card-img">
-          <img :src="blog.image" alt="blog-img">
+          <img :src="blog.image" alt="blog-img" />
         </div>
       </div>
     </div>
@@ -44,7 +47,8 @@ export default {
     getArticle() {
       this.status.blogsLoading = true;
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/articles`;
-      axios.get(url)
+      axios
+        .get(url)
         .then((response) => {
           this.status.blogsLoading = false;
           console.log(response.data.articles);
@@ -58,15 +62,11 @@ export default {
   },
   mounted() {
     this.getArticle();
-
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    axios.defaults.headers.common.Authorization = token;
   },
 };
 </script>
 
 <style scoped>
-
 h1 {
   text-align: center;
   margin-top: 2em;
@@ -123,9 +123,24 @@ h1 {
 }
 
 @media (max-width: 768px) {
-  .blog-card-img {
-    height: 100%;
+  .blog-card {
+    /* margin-top: 2em;
+    border: solid 1px;
+    border-radius: 6px; */
+    height: 400px;
+    /* display: grid; */
+    grid-template-columns: 1fr;
+
+    .blog-card-img {
+      grid-row: 1;
+      /* overflow: hidden; */
+      img {
+        /* width: 120%; */
+        /* object-fit: cover; */
+        position: relative;
+        top: -20px;
+      }
+    }
   }
 }
-
 </style>
