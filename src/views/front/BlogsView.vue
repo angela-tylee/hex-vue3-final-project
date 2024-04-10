@@ -31,6 +31,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -54,9 +55,12 @@ export default {
           console.log(response.data.articles);
           this.blogs = response.data.articles;
         })
-        .catch((err) => {
+        .catch((error) => {
           this.status.blogsLoading = false;
-          alert(err.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
@@ -124,19 +128,12 @@ h1 {
 
 @media (max-width: 768px) {
   .blog-card {
-    /* margin-top: 2em;
-    border: solid 1px;
-    border-radius: 6px; */
     height: 400px;
-    /* display: grid; */
     grid-template-columns: 1fr;
 
     .blog-card-img {
       grid-row: 1;
-      /* overflow: hidden; */
       img {
-        /* width: 120%; */
-        /* object-fit: cover; */
         position: relative;
         top: -20px;
       }

@@ -5,7 +5,10 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
       <li class="breadcrumb-item"><RouterLink to="/blogs">Blog</RouterLink></li>
-      <li class="breadcrumb-item active text-primary" aria-current="page">{{ blog.title }}</li>
+      <li class="breadcrumb-item active text-primary" aria-current="page"
+        v-if="!status.blogLoading">
+        {{ blog.title }}
+      </li>
     </ol>
     </nav>
 
@@ -19,7 +22,7 @@
       <h1>{{ blog.title }}</h1>
       <p>{{ blog.description }}</p>
     </div>
-    <div class="blog-img"><img :src="blog.image" alt=""></div>
+    <div class="blog-img"><img :src="blog.image" alt="blog-img"></div>
     <div class="blog-content" v-html="blog.content"></div>
   </div>
   <RouterView></RouterView>
@@ -27,6 +30,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -50,9 +54,12 @@ export default {
           console.log(response);
           this.blog = response.data.article;
         })
-        .catch((err) => {
+        .catch((error) => {
           this.status.blogLoading = false;
-          alert(err.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
@@ -74,10 +81,6 @@ h1 {
 
 .blog-content {
   margin-top: 3em;
-}
-
-.blog-content :deep(p) {
-  text-indent: 2rem;
 }
 
 .blog-content :deep(h4) {

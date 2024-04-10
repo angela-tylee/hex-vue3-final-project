@@ -48,7 +48,6 @@ const routes = [
     ],
   },
   {
-    // Log-in Page 通常沒有導覽列，所以可以獨立建立一個路由
     path: '/log-in',
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
@@ -71,6 +70,11 @@ const routes = [
         path: 'blogs',
         name: 'blogs',
         component: () => import('../views/admin/BlogsView.vue'),
+      },
+      {
+        path: 'coupons',
+        name: 'coupons',
+        component: () => import('../views/admin/CouponsView.vue'),
       },
     ],
   },

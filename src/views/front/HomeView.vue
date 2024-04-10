@@ -121,6 +121,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -145,8 +146,11 @@ export default {
           this.status.productsLoading = false;
           this.products = response.data.products;
         })
-        .catch((err) => {
-          alert(err.response.data.message);
+        .catch((error) => {
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
     getArticle() {
@@ -159,9 +163,12 @@ export default {
           console.log(response.data.articles);
           this.blogs = response.data.articles;
         })
-        .catch((err) => {
+        .catch((error) => {
           this.status.blogsLoading = false;
-          alert(err.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
@@ -200,7 +207,6 @@ a {
 .recommendation-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  /* justify-content: space-around; */
   gap: 2em;
   h5 {
     margin-top: 1.5em;
@@ -214,7 +220,6 @@ a {
 .blog-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* justify-content: space-around; */
   gap: 2em;
   h5 {
     margin-top: 1.5em;
@@ -230,7 +235,6 @@ a {
   background-image: url('https://images.unsplash.com/photo-1690908216000-a2ddab239a13?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: cover;
   opacity: 0.9;
-  /* filter: grayscale(20%); */
   .hero-content {
     width: 80%;
   }

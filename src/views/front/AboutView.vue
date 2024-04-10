@@ -22,7 +22,7 @@
         <div class="img-container">
           <img
             src="https://images.unsplash.com/photo-1519733870-f96bef9bc85f?q=80&w=2369&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt=""
+            alt="image-1"
           />
         </div>
       </div>
@@ -52,7 +52,7 @@
       <div class="img-container">
         <img
           src="https://images.unsplash.com/photo-1610057052613-bb574bb4e4c9?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
+          alt="image-2"
         />
       </div>
     </div>
@@ -78,12 +78,6 @@ h1 {
   margin-top: 2em;
   img {
     width: 100%;
-  }
-}
-
-.about-content {
-  p {
-    text-indent: 2em;
   }
 }
 

@@ -7,6 +7,7 @@
         <li><RouterLink to="/admin/products" class="text-cus-cream">產品列表</RouterLink></li>
         <li><RouterLink to="/admin/orders" class="text-cus-cream">訂單列表</RouterLink></li>
         <li><RouterLink to="/admin/blogs" class="text-cus-cream">文章列表</RouterLink></li>
+        <li><RouterLink to="/admin/coupons" class="text-cus-cream">折扣碼列表</RouterLink></li>
         <li><RouterLink to="/" class="text-cus-cream">回到前台</RouterLink></li>
       </ul>
   </aside>
@@ -24,6 +25,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL } = import.meta.env;
 
@@ -33,17 +35,17 @@ export default {
       const url = `${VITE_API_URL}/api/user/check`;
       axios.post(url)
         .then(() => {
-          // this.getData();
         })
-        .catch((err) => {
-          alert(err.response.data.message);
-          // window.location = 'log-in.html';
+        .catch((error) => {
           this.$router.push('/log-in');
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
   mounted() {
-    // 取出 token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
     axios.defaults.headers.common.Authorization = token;
 
@@ -74,9 +76,6 @@ export default {
   top: 0;
   overflow-x: hidden;
   padding: 2em 2em;
-  /* display: flex;
-  flex-direction: column;
-  align-items: flex-start; */
   .logo-dashboard {
     margin-left: 1em;
     img {
@@ -100,7 +99,7 @@ export default {
   }
   a:hover {
     background-color: #9d6424;
-    width: 130%;
+    width: 150px;
     border-radius: 20px;
   }
 }

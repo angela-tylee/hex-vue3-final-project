@@ -7,6 +7,30 @@
   color: $primary;
 }
 
-// @import 'bootstrap/scss/functions';
+@media (max-width: 1024px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@import 'sweetalert2/src/sweetalert2.scss';
 @import 'bootstrap/scss/bootstrap.scss';
-@import 'bootstrap-icons/font/bootstrap-icons.css'
+@import 'bootstrap-icons/font/bootstrap-icons.css';

@@ -2,6 +2,12 @@
   <div class="row py-3">
     <div class="col-md-9">
       <h2>產品列表</h2>
+      <div class="btn-group mt-3">
+        <button type="button" class="btn btn-primary btn-sm"
+        @click="openModal('new')">
+        新增產品
+        </button>
+      </div>
       <table class="table table-hover mt-4">
         <thead>
           <tr>
@@ -28,12 +34,10 @@
               <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary btn-sm"
                 @click="openModal('edit',item)">
-                <!-- 點擊此按鈕，呼叫 Bootstrap JS 函式 openModal()，isNew = edit 的條件 -->
                 編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm"
                 @click="openModal('delete',item)">
-                <!-- 點擊此按鈕，呼叫 Bootstrap JS 函式 openModal()，isNew = delete 的條件 -->
                 刪除
                 </button>
               </div>
@@ -46,13 +50,18 @@
           </tr>
         </tbody>
       </table>
-      <p>目前有 <span>{{ products.length }}</span> 項產品</p>
+      <!-- loading -->
+      <div class="loading" v-if="status.listLoading">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+      <p>目前有 <span>{{ Object.keys(products).length }}</span> 項產品</p>
     </div>
+
     <div class="col-md-3">
       <h2>單一產品細節</h2>
       <template v-if="temp.title">
         <div class="card mb-3">
-          <img v-bind:src="temp.imageUrl" class="card-img-top primary-image" alt="主圖" />
+          <img v-bind:src="temp.imageUrl" class="card-img-top primary-image" alt="main-image" />
           <div class="card-body">
             <h5 class="card-title">
               {{ temp.title }}
@@ -70,7 +79,7 @@
           </div>
         </div>
         <template>
-          <img src="" alt="" class="images m-2" />
+          <img src="" alt="image" class="images m-2" />
         </template>
       </template>
       <p class="text-secondary" v-else>請選擇一個商品查看</p>
@@ -100,7 +109,7 @@
                     <input type="text" class="form-control" placeholder="請輸入圖片連結"
                     v-model="temp.imageUrl">
                   </div>
-                  <img class="img-fluid" :src="temp.imageUrl" alt="">
+                  <img class="img-fluid" :src="temp.imageUrl" alt="image-preview">
                 </div>
                 <div>
                   <button class="btn btn-outline-primary btn-sm d-block w-100 mt-3"
@@ -218,6 +227,7 @@
 <script>
 import axios from 'axios';
 import * as bootstrap from 'bootstrap';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -230,20 +240,30 @@ export default {
       products: [],
       temp: {},
       isNew: false,
+      status: {
+        listLoading: false,
+      },
     };
   },
   methods: {
     getData() {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/products/all`;
+      this.status.listLoading = true;
       axios.get(url)
-        // 成功後顯示將 response.data.products 存到定義好的 products 陣列中，使 products.html 取值
         .then((response) => {
-          console.log(response.data.products);
+          console.log(response);
           this.products = response.data.products;
+          this.status.listLoading = false;
         })
-        .catch((err) => {
-        // 失敗顯示預設的錯誤訊息
-          alert(err.response.data.message);
+        .catch((error) => {
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
+          this.status.listLoading = false;
+          if (error.response.status === 401) {
+            this.$router.push('/log-in');
+          }
         });
     },
     openProduct(item) {
@@ -251,24 +271,29 @@ export default {
     },
     updateProduct() {
       let url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/product`;
-      let http = 'post'; // 根據資料是否已存在會對資料做不同的操作，因此 http verb 儲存在一個可重新賦值的變數中
+      let http = 'post';
 
-      // 如果這筆資料 isNew = true，則直接更新 (put)
       if (!this.isNew) {
         url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/product/${this.temp.id}`;
         http = 'put';
       }
 
-      // method = 括弧記法 []，將變數 'http' 包起來，根據資料狀態動態調整操作資料的方式 （post / put)
-      // data = data (){} 中定義的 temp 物件
       axios[http](url, { data: this.temp })
         .then((response) => {
-          alert(response.data.message);
+          Swal.fire({
+            title: response.data.message,
+            icon: 'success',
+            confirmButtonColor: 'var(--bs-primary)',
+            iconColor: 'var(--bs-primary)',
+          });
           productModal.hide();
           this.getData();
         })
         .catch((error) => {
-          alert(error.data.message);
+          Swal.fire({
+            title: error.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
     openModal(isNew, item) {
@@ -280,12 +305,10 @@ export default {
         productModal.show();
       } else if (isNew === 'edit') {
         this.temp = { ...item };
-        // 以展開 (spread) 進行淺拷貝（shallow copy)
         this.isNew = false;
         productModal.show();
       } else if (isNew === 'delete') {
         this.temp = { ...item };
-        // 以展開 (spread) 進行淺拷貝（shallow copy)
         delProductModal.show();
       }
     },
@@ -294,20 +317,24 @@ export default {
 
       axios.delete(url)
         .then((response) => {
-          alert(response.data.message);
+          Swal.fire({
+            title: response.data.message,
+            icon: 'success',
+            confirmButtonColor: 'var(--bs-primary)',
+            iconColor: 'var(--bs-primary)',
+          });
           delProductModal.hide();
           this.getData();
         })
         .catch((error) => {
-          alert(error.data.message);
+          Swal.fire({
+            title: error.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
   mounted() {
-    // 取出 token
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    axios.defaults.headers.common.Authorization = token;
-
     this.getData();
 
     productModal = new bootstrap.Modal(document.getElementById('productModal'));
@@ -316,4 +343,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .spinner-border {
+    margin: 3em;
+    width: 5em;
+    height: 5em;
+    --bs-spinner-border-width: 10px;
+  }
+}
+</style>

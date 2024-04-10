@@ -16,23 +16,15 @@
         <div>
           <h2>{{ product.title }}</h2>
           <span>{{ product.category }}</span>
-          <h4>PRODUCT DESCRIPTION</h4>
+          <h5 class="text-primary mt-3">PRODUCT DESCRIPTION</h5>
           <p>{{ product.description }}</p>
         </div>
         <div>
           <div class="quantity-block">
-            <!-- <div class="input-group">
-              <button class="btn btn-outline-secondary" type="button"
-              @click="value--" :disabled="value===1"> - </button>
-              <input type="number" class="form-control text-center"
-              value="1" readonly>
-              <button class="btn btn-outline-secondary" type="button"
-              @click="value++"> + </button>
-            </div> -->
             <div class="input-group">
               <button class="btn btn-outline-secondary" type="button"
               @click="qty--; changeQty(qty)" :disabled="qty === 1"> - </button>
-                <input type="number" class="form-control text-center"
+                <input type="text" class="form-control text-center"
                 value="1" v-model="qty" readonly>
               <button class="btn btn-outline-secondary" type="button"
               @click="qty++; changeQty(qty)"> + </button>
@@ -61,6 +53,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -84,8 +77,11 @@ export default {
           console.log(response.data.product);
           this.product = response.data.product;
         })
-        .catch((err) => {
-          alert(err.response.data.message);
+        .catch((error) => {
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
     addToCart(product, qty = 1) {
@@ -97,9 +93,19 @@ export default {
       axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
         .then(() => {
           this.status.addCartLoading = '';
+          Swal.fire({
+            title: '已加入購物車!',
+            icon: 'success',
+            confirmButtonColor: 'var(--bs-primary)',
+            iconColor: 'var(--bs-primary)',
+          });
         })
         .catch((error) => {
-          alert(error.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
+          this.status.addCartLoading = '';
         });
     },
     changeQty(num) {
@@ -169,9 +175,9 @@ nav {
   }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .img-container {
     grid-row: 2;
   }
-}
+} */
 </style>

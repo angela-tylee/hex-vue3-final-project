@@ -1749,3 +1749,63 @@ $display-line-height: $headings-line-height !default;
 // $nested-kbd-font-weight:            null !default; // Deprecated in v5.2.0, removing in v6
 
 // $pre-color:                         null !default;
+
+
+// SweetAlert2
+
+$swal2-white: #fff !default;
+$swal2-black: #000 !default;
+$swal2-outline-color: rgba(100, 150, 200, 0.5) !default;
+
+// ICONS
+$swal2-icon-size: 5em !default;
+$swal2-icon-animations: true !default;
+$swal2-icon-margin: 2.5em auto 0.6em !default;
+$swal2-icon-font-family: inherit !default;
+$swal2-icon-font-size: 3.75em !default;
+$swal2-icon-border-color: #000 !default;
+$swal2-icon-zoom: null !default;
+$swal2-success: $primary; //custom
+$swal2-success-border: rgba($swal2-success, 0.3) !default;
+$swal2-error: #f27474 !default;
+$swal2-warning: #f8bb86 !default;
+$swal2-info: #3fc3ee !default;
+$swal2-question: #87adbd !default;
+
+// COMMON VARIABLES FOR ALL ACTION BUTTONS
+$swal2-button-margin: 0.3125em !default;
+$swal2-button-padding: 0.625em 1.1em !default;
+$swal2-button-transition: box-shadow 0.1s !default;
+$swal2-button-box-shadow: 0 0 0 3px transparent !default;
+$swal2-button-font-weight: 500 !default;
+$swal2-button-darken-hover: rgba($swal2-black, 0.1) !default;
+$swal2-button-darken-active: rgba($swal2-black, 0.2) !default;
+$swal2-button-focus-outline: none !default;
+$swal2-button-focus-box-shadow: 0 0 0 3px $swal2-outline-color !default;
+
+// CONFIRM BUTTON
+$swal2-confirm-button-order: null !default;
+$swal2-confirm-button-border: 0 !default;
+$swal2-confirm-button-border-radius: 0.25em !default;
+$swal2-confirm-button-background-color: $primary; // custom
+$swal2-confirm-button-color: $swal2-white !default;
+$swal2-confirm-button-font-size: 1em !default;
+$swal2-confirm-button-focus-box-shadow: 0 0 0 3px rgba($swal2-confirm-button-background-color, 0.5) !default;
+
+// DENY BUTTON
+$swal2-deny-button-order: null !default;
+$swal2-deny-button-border: 0 !default;
+$swal2-deny-button-border-radius: 0.25em !default;
+$swal2-deny-button-background-color: #dc3741 !default;
+$swal2-deny-button-color: $swal2-white !default;
+$swal2-deny-button-font-size: 1em !default;
+$swal2-deny-button-focus-box-shadow: 0 0 0 3px rgba($swal2-deny-button-background-color, 0.5) !default;
+
+// CANCEL BUTTON
+$swal2-cancel-button-order: null !default;
+$swal2-cancel-button-border: 0 !default;
+$swal2-cancel-button-border-radius: 0.25em !default;
+$swal2-cancel-button-background-color: #6e7881 !default;
+$swal2-cancel-button-color: $swal2-white !default;
+$swal2-cancel-button-font-size: 1em !default;
+$swal2-cancel-button-focus-box-shadow: 0 0 0 3px rgba($swal2-cancel-button-background-color, 0.5) !default;

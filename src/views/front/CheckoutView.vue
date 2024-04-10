@@ -52,12 +52,16 @@
           <div class="order-detail">
             <div class="row row-cols-2">
               <div class="col-12">Item</div>
-              <div class="col-12 mt-4 row row-cols-2 order-item-flex"
+              <!-- loading -->
+              <div class="col-12 loading" v-if="status.cartLoading">
+                <div class="spinner-border text-primary" role="status"></div>
+              </div>
+              <div class="col-12 row row-cols-2 order-item-flex"
                 v-for="cart in carts.carts" :key="cart.id">
-                <div class="col-4">
-                  <img :src="cart.product.imageUrl" alt="" style="width: 100%">
+                <div class="col-5 order-img">
+                  <img :src="cart.product.imageUrl" alt="product-img" style="width: 100%">
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                   <RouterLink :to="`/product/${cart.product.id}`">
                     <span>{{ cart.product.title }}</span>
                   </RouterLink>
@@ -66,8 +70,8 @@
               </div>
               <div class="col-6 mt-4">Subtotal</div>
               <div class="col-6 mt-4 text-end"> $ {{ carts.total }}</div>
-              <div class="col-6 mt-4 fs-5 fw-semibold">Total:</div>
-              <div class="col-6 mt-4 text-end fs-5 fw-semibold">
+              <div class="col-6 mt-2 fs-5 fw-semibold">Total:</div>
+              <div class="col-6 mt-2 text-end fs-5 fw-semibold">
                 $ {{ carts.final_total }} </div>
             </div>
           </div>
@@ -79,14 +83,6 @@
 </template>
 
 <script>
-// const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
-
-// const { required, email, min, max } = VeeValidateRules;
-
-// defineRule('required', required);
-// defineRule('email', email);
-// defineRule('min', min);
-// defineRule('max', max);
 
 import {
   Field as VField, Form as VForm, ErrorMessage, defineRule, configure,
@@ -97,6 +93,7 @@ import { localize, setLocale } from '@vee-validate/i18n';
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json';
 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -122,33 +119,46 @@ export default {
         },
         message: '',
       },
+      status: {
+        cartLoading: false,
+      },
     };
   },
   methods: {
     createOrder() {
       const order = this.form;
-      // console.log(this.form);
       axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/order`, { data: order })
         .then((response) => {
-          alert(response.data.message);
+          Swal.fire({
+            title: response.data.message,
+            icon: 'success',
+            confirmButtonColor: 'var(--bs-primary)',
+            iconColor: 'var(--bs-primary)',
+          });
           this.$refs.form.resetForm();
           this.$router.push('/');
         })
         .catch((error) => {
-          alert(error.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
     getCart() {
-      // this.status.cartLoading = true;
+      this.status.cartLoading = true;
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
         .then((response) => {
-          // this.status.cartLoading = false;
+          this.status.cartLoading = false;
           console.log(response);
           this.carts = response.data.data;
         })
         .catch((error) => {
-          alert(error.response.data.message);
-          // this.status.cartLoading = false;
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
+          this.status.cartLoading = false;
         });
     },
   },
@@ -211,6 +221,22 @@ export default {
   }
 }
 
+.order-img{
+  height: 40px;
+  overflow: hidden;
+  margin-block: 0.5em;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+}
+
+.loading {
+  text-align: center;
+}
+
 @media (max-width: 1024px) {
   .checkout-grid {
     grid-template-columns: 1fr;
@@ -221,5 +247,15 @@ export default {
       margin-top: 2em;
     }
   }
+  .order-img{
+  height: 120px;
+  }
 }
+
+@media (max-width: 768px) {
+  .order-img{
+  height: 80px;
+  }
+}
+
 </style>

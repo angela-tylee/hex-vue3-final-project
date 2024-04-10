@@ -33,25 +33,20 @@
             <td v-else class="text-danger">未付款</td>
             <td>
               <div class="btn-group">
-                <!-- <button type="button" class="btn btn-outline-primary btn-sm"
-                @click="openModal('edit',item)">
-                編輯
-                </button> -->
                 <button type="button" class="btn btn-outline-danger btn-sm"
                 @click="openModal('delete',order)">
                 刪除
                 </button>
               </div>
             </td>
-            <!-- <td>
-              <button type="button" class="btn btn-primary" v-on:click="temp = item">
-                查看細節
-              </button>
-            </td> -->
           </tr>
         </tbody>
       </table>
-      <p>目前有 <span></span> 項產品</p>
+      <!-- loading -->
+      <div class="loading" v-if="status.listLoading">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+      <p>目前有 <span>{{ orders.length }}</span> 項產品</p>
     </div>
   </div>
 
@@ -88,6 +83,7 @@
 <script>
 import axios from 'axios';
 import * as bootstrap from 'bootstrap';
+import Swal from 'sweetalert2';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -96,12 +92,11 @@ let delOrderModal = '';
 export default {
   data() {
     return {
-      orders: {},
+      orders: [],
       temp: {},
       isNew: false,
       status: {
-        addCartLoading: '',
-        cartQtyLoading: '',
+        listLoading: false,
       },
       form: {
         user: {
@@ -116,13 +111,22 @@ export default {
   },
   methods: {
     getOrders() {
+      this.status.listLoading = true;
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/admin/orders`)
         .then((response) => {
           console.log(response);
           this.orders = response.data.orders;
+          this.status.listLoading = false;
         })
         .catch((error) => {
-          alert(error.response.data.message);
+          Swal.fire({
+            title: error.response.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
+          this.status.listLoading = false;
+          if (error.response.status === 401) {
+            this.$router.push('/log-in');
+          }
         });
     },
     openModal(isNew, item) {
@@ -136,20 +140,24 @@ export default {
 
       axios.delete(url)
         .then((response) => {
-          alert(response.data.message);
+          Swal.fire({
+            title: response.data.message,
+            icon: 'success',
+            confirmButtonColor: 'var(--bs-primary)',
+            iconColor: 'var(--bs-primary)',
+          });
           delOrderModal.hide();
           this.getOrders();
         })
         .catch((error) => {
-          alert(error.data.message);
+          Swal.fire({
+            title: error.data.message,
+            confirmButtonColor: 'var(--bs-danger)',
+          });
         });
     },
   },
   mounted() {
-    // 取出 token
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    axios.defaults.headers.common.Authorization = token;
-
     this.getOrders();
 
     delOrderModal = new bootstrap.Modal(document.getElementById('delProductModal'));
@@ -158,4 +166,16 @@ export default {
 
 </script>
 
-<style></style>
+<style>
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .spinner-border {
+    margin: 3em;
+    width: 5em;
+    height: 5em;
+    --bs-spinner-border-width: 10px;
+  }
+}
+</style>
