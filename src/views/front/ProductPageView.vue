@@ -48,12 +48,12 @@
           </div>
           <button type="button" class="btn btn-primary add-to-cart"
             @click.prevent="addToCart(product, qty)"
-            :disabled="product.id === status.addCartLoading">
+            :disabled="storeStatus.addCartLoading">
             <i
             class="spinner-border text-white"
-            v-if="product.id === status.addCartLoading"
+            v-if="storeStatus.addCartLoading"
             style="width: 1.2em; height: 1.2em" role="status"></i>
-            <span class="text-white">{{ $t('button.add-to-cart') }}</span>
+            <span class="text-white">{{$t('button.add-to-cart') }}</span>
           </button>
         </div>
       </div>
@@ -85,6 +85,8 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { mapState, mapActions } from 'pinia';
+import cartStore from '../../stores/cartStore';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -93,10 +95,10 @@ export default {
     return {
       product: {},
       similarProducts: [],
-      cart: {},
+      // cart: {},
       status: {
         pageLoading: false,
-        addCartLoading: '',
+        // addCartLoading: '',
       },
       qty: 1,
     };
@@ -110,20 +112,6 @@ export default {
     },
   },
   methods: {
-    getProducts() {
-      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/products/all`;
-      axios
-        .get(url)
-        .then((response) => {
-          this.similarProducts = response.data.products;
-        })
-        .catch((error) => {
-          Swal.fire({
-            title: error.response.data.message,
-            confirmButtonColor: 'var(--bs-danger)',
-          });
-        });
-    },
     getData() {
       const { id } = this.$route.params;
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/product/${id}`;
@@ -156,35 +144,51 @@ export default {
           });
         });
     },
-    addToCart(product, qty = 1) {
-      const order = {
-        product_id: product.id,
-        qty,
-      };
-      this.status.addCartLoading = order.product_id;
-      axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
-        .then(() => {
-          this.status.addCartLoading = '';
-          Swal.fire({
-            title: '已加入購物車!',
-            icon: 'success',
-            confirmButtonColor: 'var(--bs-primary)',
-            iconColor: 'var(--bs-primary)',
-          });
+    // addToCart(product, qty = 1) {
+    //   const order = {
+    //     product_id: product.id,
+    //     qty,
+    //   };
+    //   this.status.addCartLoading = order.product_id;
+    //   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
+    //     .then(() => {
+    //       this.status.addCartLoading = '';
+    //       Swal.fire({
+    //         title: '已加入購物車!',
+    //         icon: 'success',
+    //         confirmButtonColor: 'var(--bs-primary)',
+    //         iconColor: 'var(--bs-primary)',
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.fire({
+    //         title: error.response.data.message,
+    //         confirmButtonColor: 'var(--bs-danger)',
+    //       });
+    //       this.status.addCartLoading = '';
+    //     });
+    // },
+    ...mapActions(cartStore, ['addToCart']),
+    changeQty(num) {
+      this.qty = num;
+    },
+    getProducts() {
+      const url = `${VITE_API_URL}/api/${VITE_API_PATH}/products/all`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.similarProducts = response.data.products;
         })
         .catch((error) => {
           Swal.fire({
             title: error.response.data.message,
             confirmButtonColor: 'var(--bs-danger)',
           });
-          this.status.addCartLoading = '';
         });
-    },
-    changeQty(num) {
-      this.qty = num;
     },
   },
   computed: {
+    ...mapState(cartStore, ['storeStatus']),
     filteredCake() {
       return this.similarProducts
         .filter(
@@ -296,6 +300,7 @@ nav {
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1000;
   .spinner-border {
     margin: 3em;
     width: 5em;

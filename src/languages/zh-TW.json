@@ -27,6 +27,9 @@
     "recommendation":"為你推薦",
     "blog":"了解更多"
   },
+  "product": {
+    "category": "類別"
+  },
   "cart": {
     "shopping-cart": "購物車",
     "item": "品項",
@@ -41,7 +44,7 @@
     "apply-discount": "套用",
     "coupon-applied": "已套用優惠券！",
     "final-total": "總計",
-    "checkout": "前往結賬",
+    "checkout": "前往結帳",
     "cart-empty": "購物車沒有東西！",
     "continue-shopping": "回去逛逛"
   },

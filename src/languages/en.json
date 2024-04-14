@@ -27,6 +27,9 @@
     "recommendation":"Recommendation",
     "blog":"Explore our Blog"
   },
+  "product": {
+    "category": "Category"
+  },
   "cart": {
     "shopping-cart": "Shopping Cart",
     "item": "Item",

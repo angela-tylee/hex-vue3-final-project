@@ -29,7 +29,7 @@
               <div
                 class="d-flex justify-content-between align-items-center pe-1"
               >
-                <h4 class="mb-0">Category</h4>
+                <h4 class="mb-0">{{ $t('product.category') }}</h4>
               </div>
             </div>
             <div>
@@ -136,6 +136,8 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { mapActions } from 'pinia';
+import cartStore from '../../stores/cartStore';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -153,7 +155,7 @@ export default {
       ],
       status: {
         productsLoading: false,
-        addCartLoading: false,
+        // addCartLoading: false,
       },
     };
   },
@@ -205,30 +207,31 @@ export default {
           });
         });
     },
-    addToCart(product, qty = 1) {
-      const order = {
-        product_id: product.id,
-        qty,
-      };
-      this.status.addCartLoading = order.product_id;
-      axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
-        .then(() => {
-          this.status.addCartLoading = '';
-          Swal.fire({
-            title: '已加入購物車!',
-            icon: 'success',
-            confirmButtonColor: 'var(--bs-primary)',
-            iconColor: 'var(--bs-primary)',
-          });
-        })
-        .catch((error) => {
-          Swal.fire({
-            title: error.response.data.message,
-            confirmButtonColor: 'var(--bs-danger)',
-          });
-          this.status.addCartLoading = '';
-        });
-    },
+    // addToCart(product, qty = 1) {
+    //   const order = {
+    //     product_id: product.id,
+    //     qty,
+    //   };
+    //   this.status.addCartLoading = order.product_id;
+    //   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
+    //     .then(() => {
+    //       this.status.addCartLoading = '';
+    //       Swal.fire({
+    //         title: '已加入購物車!',
+    //         icon: 'success',
+    //         confirmButtonColor: 'var(--bs-primary)',
+    //         iconColor: 'var(--bs-primary)',
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       Swal.fire({
+    //         title: error.response.data.message,
+    //         confirmButtonColor: 'var(--bs-danger)',
+    //       });
+    //       this.status.addCartLoading = '';
+    //     });
+    // },
+    ...mapActions(cartStore, ['addToCart']),
   },
   mounted() {
     this.getData();

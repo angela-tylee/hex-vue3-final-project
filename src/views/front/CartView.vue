@@ -74,7 +74,7 @@
           </tbody>
         </table>
         <!-- loading -->
-        <div class="loading" v-if="status.cartLoading">
+        <div class="loading" v-if="storeStatus.cartLoading">
           <div class="spinner-border text-primary" role="status"></div>
         </div>
         <!--  -->
@@ -106,7 +106,7 @@
               aria-describedby="button-addon2" v-model="coupon.code">
               <button class="btn btn-secondary text-cus-cream" type="button" id="button-addon2"
               @click.prevent = "applyCoupon(coupon.code)"
-              :disabled = "status.couponLoading">
+              :disabled = "status.couponLoading || coupon.code === ''">
                 <i class="spinner-border text-cus-cream"
                   style="width: 1.2em; height: 1.2em" role="status"
                   v-if="status.couponLoading">
@@ -136,6 +136,7 @@
         </div>
       </div>
     </div>
+
     <!-- Modal -->
     <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
       aria-labelledby="delProductModalLabel" aria-hidden="true">
@@ -171,6 +172,8 @@
 import axios from 'axios';
 import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
+import { mapState, mapActions } from 'pinia';
+import cartStore from '../../stores/cartStore';
 
 const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
@@ -179,17 +182,17 @@ let removeCartAllModal = '';
 export default {
   data() {
     return {
-      carts: {},
-      cartQty: 0,
-      cartLength: '',
+      // carts: {},
+      // cartQty: 0,
+      // cartLength: '',
       coupon: {
         code: '',
         success: false,
       },
       status: {
-        addCartLoading: '',
+        // addCartLoading: '',
         removeCartLoading: false,
-        cartLoading: false,
+        // cartLoading: false,
         couponLoading: false,
       },
     };
@@ -202,47 +205,51 @@ export default {
       deep: true,
     },
   },
+  computed: {
+    ...mapState(cartStore, ['carts', 'cartQty', 'cartLength', 'storeStatus']),
+  },
   methods: {
-    getCart() {
-      this.status.cartLoading = true;
-      axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
-        .then((response) => {
-          this.status.cartLoading = false;
-          console.log(response);
-          this.carts = response.data.data;
-          this.cartLength = this.carts.carts.length;
-          this.getCartQty();
-        })
-        .catch((error) => {
-          Swal.fire({
-            title: error.response.data.message,
-            confirmButtonColor: 'var(--bs-danger)',
-          });
-          this.status.cartLoading = false;
-        });
-    },
-    changeCartQty(item, qty = 1) {
-      const order = {
-        product_id: item.product.id,
-        qty,
-      };
-      axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
-        .then(() => {
-          this.getCart();
-        })
-        .catch((error) => {
-          Swal.fire({
-            title: error.response.data.message,
-            confirmButtonColor: 'var(--bs-danger)',
-          });
-        });
-    },
-    getCartQty() {
-      this.cartQty = 0;
-      this.carts.carts.forEach((cart) => {
-        this.cartQty += cart.qty;
-      });
-    },
+    ...mapActions(cartStore, ['getCart', 'changeCartQty', 'getCartQty']),
+    // getCart() {
+    //   this.status.cartLoading = true;
+    //   axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
+    //     .then((response) => {
+    //       this.status.cartLoading = false;
+    //       console.log(response);
+    //       this.carts = response.data.data;
+    //       this.cartLength = this.carts.carts.length;
+    //       this.getCartQty();
+    //     })
+    //     .catch((error) => {
+    //       Swal.fire({
+    //         title: error.response.data.message,
+    //         confirmButtonColor: 'var(--bs-danger)',
+    //       });
+    //       this.status.cartLoading = false;
+    //     });
+    // },
+    // changeCartQty(item, qty = 1) {
+    //   const order = {
+    //     product_id: item.product.id,
+    //     qty,
+    //   };
+    //   axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
+    //     .then(() => {
+    //       this.getCart();
+    //     })
+    //     .catch((error) => {
+    //       Swal.fire({
+    //         title: error.response.data.message,
+    //         confirmButtonColor: 'var(--bs-danger)',
+    //       });
+    //     });
+    // },
+    // getCartQty() {
+    //   this.cartQty = 0;
+    //   this.carts.carts.forEach((cart) => {
+    //     this.cartQty += cart.qty;
+    //   });
+    // },
     removeCartItem(id) {
       axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${id}`)
         .then(() => {
