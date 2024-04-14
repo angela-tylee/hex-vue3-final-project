@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="border-primary">Blog</h1>
+    <h1 class="border-primary">{{ $t('header.blogs') }}</h1>
 
     <!-- loading -->
     <div class="loading" v-if="status.blogsLoading">
@@ -16,9 +16,11 @@
       >
         <div class="blog-card-content">
           <RouterLink :to="`/blog/${blog.id}`">
-            <h3>{{ blog.title }}</h3>
+            <h3 v-if="$i18n.locale === 'zh-TW'">{{ blog.title }}</h3>
+            <h3 v-if="$i18n.locale === 'en'">{{ blog.en.title }}</h3>
           </RouterLink>
-          <p>{{ blog.description }}</p>
+          <p v-if="$i18n.locale === 'zh-TW'">{{ blog.description }}</p>
+          <p v-if="$i18n.locale === 'en'">{{ blog.en.description }}</p>
         </div>
         <div class="blog-card-img">
           <img :src="blog.image" alt="blog-img" />
@@ -43,6 +45,14 @@ export default {
         blogsLoading: false,
       },
     };
+  },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        this.getArticle();
+      },
+      deep: true,
+    },
   },
   methods: {
     getArticle() {

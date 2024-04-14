@@ -33,7 +33,7 @@
             <td>
               <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary btn-sm"
-                @click="openModal('edit',item)">
+                @click="openModal('edit',item, item.en)">
                 編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -111,26 +111,20 @@
                   </div>
                   <img class="img-fluid" :src="temp.imageUrl" alt="image-preview">
                 </div>
-                <div>
-                  <button class="btn btn-outline-primary btn-sm d-block w-100 mt-3"
-                  @click="createImages">
-                    新增圖片
-                  </button>
-                </div>
-                <div>
-                  <button class="btn btn-outline-danger btn-sm d-block w-100 mt-3"
-                  @click="delImages">
-                    刪除圖片
-                  </button>
-                </div>
               </div>
               <div class="col-sm-8">
-                <div class="mb-3">
-                  <label for="title" class="form-label">標題</label>
-                  <input id="title" type="text" class="form-control" placeholder="請輸入標題"
-                  v-model="temp.title">
+                <div class="row">
+                  <div class="mb-3 col-md-6">
+                    <label for="title" class="form-label">標題</label>
+                    <input id="title" type="text" class="form-control" placeholder="請輸入標題"
+                    v-model="temp.title">
+                  </div>
+                  <div class="mb-3 col-md-6">
+                    <label for="title" class="form-label">Title</label>
+                    <input id="title" type="text" class="form-control" placeholder="請輸入標題"
+                    v-model="enTemp.title">
+                  </div>
                 </div>
-
                 <div class="row">
                   <div class="mb-3 col-md-6">
                     <label for="category" class="form-label">分類</label>
@@ -138,12 +132,23 @@
                     v-model="temp.category">
                   </div>
                   <div class="mb-3 col-md-6">
-                    <label for="price" class="form-label">單位</label>
-                    <input id="unit" type="text" class="form-control" placeholder="請輸入單位"
-                    v-model="temp.unit">
+                    <label for="category" class="form-label">Category</label>
+                    <input id="category" type="text" class="form-control" placeholder="請輸入單位"
+                    v-model="enTemp.category">
                   </div>
                 </div>
-
+                <div class="row">
+                  <div class="mb-3 col-md-6">
+                    <label for="unit" class="form-label">單位</label>
+                    <input id="unit" type="text" class="form-control" placeholder="請輸入分類"
+                    v-model="temp.unit">
+                  </div>
+                  <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">Unit</label>
+                    <input id="unit" type="text" class="form-control" placeholder="請輸入單位"
+                    v-model="enTemp.unit">
+                  </div>
+                </div>
                 <div class="row">
                   <div class="mb-3 col-md-6">
                     <label for="origin_price" class="form-label">原價</label>
@@ -158,11 +163,16 @@
                   </div>
                 </div>
                 <hr>
-
                 <div class="mb-3">
                   <label for="description" class="form-label">產品描述</label>
                   <textarea id="description" type="text" class="form-control" placeholder="請輸入產品描述"
                     v-model="temp.description">
+                    </textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Product Description</label>
+                  <textarea id="description" type="text" class="form-control" placeholder="請輸入產品描述"
+                    v-model="enTemp.description">
                     </textarea>
                 </div>
                 <div class="mb-3">
@@ -239,6 +249,7 @@ export default {
     return {
       products: [],
       temp: {},
+      enTemp: {},
       isNew: false,
       status: {
         listLoading: false,
@@ -278,7 +289,7 @@ export default {
         http = 'put';
       }
 
-      axios[http](url, { data: this.temp })
+      axios[http](url, { data: { ...this.temp, en: this.enTemp } })
         .then((response) => {
           Swal.fire({
             title: response.data.message,
@@ -296,15 +307,16 @@ export default {
           });
         });
     },
-    openModal(isNew, item) {
+    openModal(isNew, item, enItem) {
       if (isNew === 'new') {
         this.temp = {
-          imagesUrl: [],
+          en: this.enTemp,
         };
         this.isNew = true;
         productModal.show();
       } else if (isNew === 'edit') {
         this.temp = { ...item };
+        this.enTemp = { ...enItem };
         this.isNew = false;
         productModal.show();
       } else if (isNew === 'delete') {

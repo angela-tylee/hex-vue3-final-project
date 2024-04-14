@@ -1,0 +1,84 @@
+{
+  "header": {
+    "home": "Home",
+    "products": "Desserts",
+    "blogs": "Blog",
+    "about": "Our Story",
+    "language": "English"
+  },
+  "footer": {
+    "log-in": "Admin Login",
+    "admin": "Dashboard",
+    "for-learning": "For learning purposes only, none commercial use."
+  },
+  "home": {
+    "slogan": "Indulge in our mouth-watering dessert selection.",
+    "subheading": "Explore by flavor, type, or special offers!",
+    "intro-1":"Handcrafted Delights",
+    "intro-content-1":"Every treat is lovingly crafted by skilled hands, ensuring each bite is a testament to our dedication to artisanal perfection. From sumptuous cakes to delicate pastries, experience the joy of homemade goodness in every delightful morsel.",
+    "intro-2":"Pure Ingredients, Perfect Treats",
+    "intro-content-2":"Indulge in the goodness of nature with our desserts crafted from wholesome ingredients like flour, eggs, and butter. Savor the richness of flavors, knowing each bite is crafted with care and quality.",
+    "intro-3":"Whisking Magic: Creating Cake Batter",
+    "intro-content-3":"Dive into the world of sweet alchemy as we reveal the secrets behind crafting the perfect cake batter. Watch as flour, eggs, and butter harmonize into a symphony of flavor and texture, promising an unforgettable dessert experience.",
+    "reservation":"Reserve 3 Days in Advance",
+    "reservation-content":"We sincerely request that you make reservations at least three days in advance, allowing us ample time to prepare your order with the utmost care and attention to detail",
+    "delivery":"Delicious Direct Delivery",
+    "delivery-content":"We are delighted to offer exclusive delivery services tailored for our customers in Taiwan, bringing our outstanding products directly to your doorstep. We look forward to providing you with the highest quality shopping experience!",
+    "recommendation":"Recommendation",
+    "blog":"Explore our Blog"
+  },
+  "cart": {
+    "shopping-cart": "Shopping Cart",
+    "item": "Item",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "remove-cart-all": "Clear All",
+    "order-summary": "Order Summary",
+    "total-qty": "Total Quantity",
+    "subtotal": "Subtotal",
+    "discount": "Discount Code",
+    "apply-discount": "Apply",
+    "coupon-applied": "Coupon Applied!",
+    "final-total": "Total",
+    "checkout": "Proceed to Checkout",
+    "cart-empty": "Nothing in the cart.",
+    "continue-shopping": "Back to Shopping"
+  },
+  "checkout": {
+    "heading": "Checkout",
+    "name": "Name",
+    "name-placeholder": "Enter your name",
+    "email": "Email",
+    "email-placeholder": "Enter your email address",
+    "tel": "Phone Number",
+    "tel-placeholder": "Enter your phone number",
+    "address": "Address",
+    "address-placeholder": "Enter your address",
+    "comment": "Comment (optional)",
+    "submit-button": "Submit order",
+    "order": "Your Order"
+  },
+  "confirm": {
+    "thanks": "Thank you! We received your order!",
+    "home": "Back to Home",
+    "shopping": "Continue Shopping"
+  },
+  "404": {
+    "p": "Oops, the sweet treat you're looking for is missing! Let's get you back on track.",
+    "button": "Go Back"
+  },
+  "page": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "stepper": {
+    "shopping": "Select desserts",
+    "cart": "Confirm items",
+    "checkout": "Submit order",
+    "confirm": "Order placed!"
+  },
+  "button": {
+    "add-to-cart": "Add to Cart"
+  }
+}

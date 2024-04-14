@@ -1,19 +1,42 @@
 <template>
   <div class="container">
     <!-- Stepper -->
+    <div class="stepper-container">
+      <div class="stepper">
+        <div class="step">
+          <RouterLink to="/products">
+            <div class="step-circle bg-primary text-cus-cream">1</div>
+          </RouterLink>
+          <span class="">{{ $t('stepper.shopping') }}</span>
+        </div>
+        <div class="step">
+          <div class="step-circle active">2</div>
+          <span>{{ $t('stepper.cart') }}</span>
+        </div>
+        <div class="step">
+          <div class="step-circle">3</div>
+          <span>{{ $t('stepper.checkout') }}</span>
+        </div>
+        <div class="step">
+          <div class="step-circle">4</div>
+          <span>{{ $t('stepper.confirm') }}</span>
+        </div>
+      </div>
+      <div class="stepper-line"></div>
+    </div>
     <!--  -->
     <div class="grid">
       <div class="grid-card shopping-cart bg-secondary-subtle">
-        <h2>Shopping Cart</h2>
+        <h2>{{ $t('cart.shopping-cart') }}</h2>
         <table class="table align-middle"
         style="--bs-table-bg:transparent; --bs-table-color: $primary">
           <thead>
             <tr>
-              <th width="15%" class="text-center">Item</th>
+              <th width="15%" class="text-center">{{ $t('cart.item') }}</th>
               <th width="30%" class="text-center"></th>
-              <th width="10%" class="text-center">Price</th>
-              <th width="25%" class="text-center">Quantity</th>
-              <th width="15%" class="text-end">Total</th>
+              <th width="10%" class="text-center">{{ $t('cart.price') }}</th>
+              <th width="25%" class="text-center">{{ $t('cart.quantity') }}</th>
+              <th width="15%" class="text-end">{{ $t('cart.total') }}</th>
               <th width="5%" class="text-center"></th>
             </tr>
           </thead>
@@ -24,7 +47,8 @@
               </td>
               <td class="table-item">
                 <RouterLink :to="`/product/${cart.product.id}`">
-                  <span>{{ cart.product.title }}</span>
+                  <span v-if=" $i18n.locale === 'zh-TW' ">{{ cart.product.title }}</span>
+                  <span v-if=" $i18n.locale === 'en' ">{{ cart.product.en.title }}</span>
                 </RouterLink>
               </td>
               <td class="table-price text-center">${{ cart.product.price }}</td>
@@ -53,8 +77,10 @@
         <div class="loading" v-if="status.cartLoading">
           <div class="spinner-border text-primary" role="status"></div>
         </div>
+        <!--  -->
         <p class="text-center mt-5 cart-empty" v-if="cartLength === 0">
-          您的購物車沒有東西，<RouterLink to="/products">前往購物 >></RouterLink>
+          {{ $t('cart.cart-empty') }} <br>
+          <RouterLink to="/products">{{ $t('cart.continue-shopping') }} >></RouterLink>
         </p>
         <button type="button" class="btn btn-primary text-cus-cream"
           v-if="cartLength !== 0"
@@ -63,18 +89,18 @@
             style="width: 1.2em; height: 1.2em" role="status"
             v-if="status.removeCartLoading">
           </i>
-          清空購物車
+          {{ $t('cart.remove-cart-all') }}
         </button>
       </div>
       <div class="grid-card order-summary bg-primary">
         <div class="order-summary-content">
-          <h2 class="text-cus-cream">Order Summary</h2>
+          <h2 class="text-cus-cream">{{ $t('cart.order-summary') }}</h2>
           <div class="row row-cols-2">
-            <div class="col-8 mt-4 text-cus-cream">Total Quantity:</div>
+            <div class="col-8 mt-4 text-cus-cream">{{ $t('cart.total-qty') }}:</div>
             <div class="col-4 mt-4 text-cus-cream text-end">{{ cartQty }}</div>
-            <div class="col-6 mt-4 text-cus-cream">Subtotal:</div>
+            <div class="col-6 mt-4 text-cus-cream">{{ $t('cart.subtotal') }}:</div>
             <div class="col-6 mt-4 text-cus-cream text-end">$ {{ carts.total }}</div>
-            <div class="col-12 mt-4 text-cus-cream">Discount Code: </div>
+            <div class="col-12 mt-4 text-cus-cream">{{ $t('cart.discount') }}: </div>
             <div class="col-12 mt-2 text-cus-cream input-group">
               <input type="text" class="form-control" placeholder="Enter SWEETTOOTH2024"
               aria-describedby="button-addon2" v-model="coupon.code">
@@ -85,13 +111,15 @@
                   style="width: 1.2em; height: 1.2em" role="status"
                   v-if="status.couponLoading">
                 </i>
-                Apply
+                {{ $t('cart.apply-discount') }}
               </button>
             </div>
             <div class="col-12 mt-4">
-              <p v-if="coupon.success" class="text-cus-cream">已套用優惠券！</p>
+              <p v-if="coupon.success" class="text-cus-cream">{{ $t('cart.coupon-applied') }}</p>
             </div>
-            <div class="col-6 mt-4 text-cus-cream fs-5 fw-semibold">Total:</div>
+            <div class="col-6 mt-4 text-cus-cream fs-5 fw-semibold">
+              {{ $t('cart.final-total') }}:
+            </div>
             <div class="col-6 mt-4 text-end fs-5 fw-semibold">
               <span class="text-cus-cream" v-if="coupon.success">$ {{ carts.final_total }}</span>
               <span class="text-cus-cream" v-else>$ {{ carts.total }}</span>
@@ -102,7 +130,7 @@
           <button type="button" class="btn btn-cus-cream text-primary"
           :disabled="cartLength === 0">
             <RouterLink to="/checkout">
-              Proceed to Checkout
+            {{ $t('cart.checkout') }}
             </RouterLink>
           </button>
         </div>
@@ -165,6 +193,14 @@ export default {
         couponLoading: false,
       },
     };
+  },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        this.getCart();
+      },
+      deep: true,
+    },
   },
   methods: {
     getCart() {
@@ -266,7 +302,6 @@ export default {
   },
   mounted() {
     this.getCart();
-
     removeCartAllModal = new bootstrap.Modal(document.getElementById('delProductModal'));
   },
 };
@@ -284,7 +319,7 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1em;
-  margin-top: 2em;
+  margin-top: 4em;
   .table {
     margin-top: 2em;
     background-color: transparent;
@@ -332,6 +367,53 @@ button a {
   }
 }
 
+/* stepper */
+.stepper-container {
+  position: relative;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 8%;
+}
+
+.stepper-line {
+  border: 1px solid var(--bs-secondary-bg-subtle);
+  width: 100%;
+  margin: 1em 0;
+  position: absolute;
+  top: 10%;
+  z-index: -10;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  span {
+    margin-top: 1em;
+  }
+}
+
+.step-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2px;
+  background-color: var(--bs-secondary-bg-subtle);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.step-circle.active {
+  box-shadow: 0 0 0 8px var(--bs-secondary-border-subtle);
+}
+
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: 1fr;
@@ -343,7 +425,6 @@ button a {
     margin-block: 1em;
   }
   .grid {
-    margin: 0em;
     .grid-card {
       padding: 1.5em;
     }

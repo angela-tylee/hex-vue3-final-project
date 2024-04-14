@@ -1,76 +1,112 @@
 <template>
   <div class="container">
+    <!-- Stepper -->
+    <div class="stepper-container">
+      <div class="stepper">
+        <div class="step">
+          <RouterLink to="/products">
+            <div class="step-circle bg-primary text-cus-cream">1</div>
+          </RouterLink>
+          <span class="">{{ $t('stepper.shopping') }}</span>
+        </div>
+        <div class="step">
+          <RouterLink to="/cart">
+            <div class="step-circle bg-primary text-cus-cream">2</div>
+          </RouterLink>
+            <span>{{ $t('stepper.cart') }}</span>
+        </div>
+        <div class="step">
+          <div class="step-circle active">3</div>
+          <span>{{ $t('stepper.checkout') }}</span>
+        </div>
+        <div class="step">
+          <div class="step-circle">4</div>
+          <span>{{ $t('stepper.confirm') }}</span>
+        </div>
+      </div>
+      <div class="stepper-line"></div>
+    </div>
+  <!--  -->
     <div class="content bg-secondary-subtle">
-      <h2>Checkout</h2>
+      <h2>{{ $t('checkout.heading') }}</h2>
       <div class="checkout-grid">
         <div class="contact-info">
           <div class="contact-info-form mb-5 row justify-content-center">
             <v-form ref="form" v-slot="{ errors }" @submit="createOrder">
               <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+                <label for="name" class="form-label">{{ $t('checkout.name') }}</label>
+                <v-field id="name" name="姓名" type="text" class="form-control"
+                :class="{'is-invalid': errors['姓名'] }"
+                  :placeholder="$t('checkout.name-placeholder')" rules="required"
+                  v-model="form.user.name"></v-field>
+                <error-message name="姓名" class="invalid-feedback"></error-message>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">{{ $t('checkout.email') }}</label>
                 <v-field id="email" name="email" type="email" class="form-control"
                 :class="{'is-invalid': errors['email'] }"
-                  placeholder="請輸入 Email" rules="email|required" v-model="form.user.email">
+                  :placeholder="$t('checkout.email-placeholder')" rules="email|required"
+                  v-model="form.user.email">
                 </v-field>
                 <error-message name="email" class="invalid-feedback"></error-message>
               </div>
               <div class="mb-3">
-                <label for="name" class="form-label">收件人姓名</label>
-                <v-field id="name" name="姓名" type="text" class="form-control"
-                :class="{'is-invalid': errors['姓名'] }"
-                  placeholder="請輸入姓名" rules="required" v-model="form.user.name"></v-field>
-                <error-message name="姓名" class="invalid-feedback"></error-message>
-              </div>
-              <div class="mb-3">
-                <label for="tel" class="form-label">收件人電話</label>
+                <label for="tel" class="form-label">{{ $t('checkout.tel') }}</label>
                 <v-field id="tel" name="電話" type="text" class="form-control"
                 :class="{'is-invalid': errors['電話'] }"
-                  placeholder="請輸入電話" rules="required|min:8|max:10" v-model="form.user.tel">
+                  :placeholder="$t('checkout.tel-placeholder')" rules="required|min:8|max:10"
+                  v-model="form.user.tel">
                 </v-field>
                 <error-message name="電話" class="invalid-feedback"></error-message>
               </div>
               <div class="mb-3">
-                <label for="address" class="form-label">收件人地址</label>
+                <label for="address" class="form-label">{{ $t('checkout.address') }}</label>
                 <v-field id="address" name="地址" type="text" class="form-control"
                 :class="{'is-invalid': errors['地址'] }"
-                  placeholder="請輸入地址" rules="required" v-model="form.user.address"></v-field>
+                  :placeholder="$t('checkout.address-placeholder')" rules="required"
+                  v-model="form.user.address"></v-field>
                 <error-message name="地址" class="invalid-feedback"></error-message>
               </div>
               <div class="mb-3">
-                <label for="message" class="form-label">備註</label>
+                <label for="message" class="form-label">{{ $t('checkout.comment') }}</label>
                 <textarea id="message" class="form-control" cols="30" rows="10"
                 v-model="form.message"></textarea>
               </div>
               <div class="text-end">
-                <button type="submit" class="btn btn-primary">送出訂單</button>
+                <RouterLink :to="`/order`">
+                  <button type="submit" class="btn btn-primary">
+                    {{ $t('checkout.submit-button') }}
+                  </button>
+                </RouterLink>
               </div>
             </v-form>
           </div>
         </div>
         <div class="order-info">
-          <h4 class="mb-4">Your Order</h4>
+          <h4 class="mb-4">{{ $t('checkout.order') }}</h4>
           <div class="order-detail">
             <div class="row row-cols-2">
-              <div class="col-12">Item</div>
+              <div class="col-12">{{ $t('cart.item') }}</div>
               <!-- loading -->
               <div class="col-12 loading" v-if="status.cartLoading">
                 <div class="spinner-border text-primary" role="status"></div>
               </div>
               <div class="col-12 row row-cols-2 order-item-flex"
                 v-for="cart in carts.carts" :key="cart.id">
-                <div class="col-5 order-img">
+                <div class="col-4 order-img">
                   <img :src="cart.product.imageUrl" alt="product-img" style="width: 100%">
                 </div>
-                <div class="col-7">
+                <div class="col-8">
                   <RouterLink :to="`/product/${cart.product.id}`">
-                    <span>{{ cart.product.title }}</span>
+                    <span v-if="$i18n.locale === 'zh-TW'">{{ cart.product.title }}</span>
+                    <span v-if="$i18n.locale === 'en'">{{ cart.product.en.title }}</span>
                   </RouterLink>
                   <span> x {{ cart.qty }}</span>
                 </div>
               </div>
-              <div class="col-6 mt-4">Subtotal</div>
+              <div class="col-6 mt-4">{{ $t('cart.subtotal') }}:</div>
               <div class="col-6 mt-4 text-end"> $ {{ carts.total }}</div>
-              <div class="col-6 mt-2 fs-5 fw-semibold">Total:</div>
+              <div class="col-6 mt-2 fs-5 fw-semibold">{{ $t('cart.final-total') }}:</div>
               <div class="col-6 mt-2 text-end fs-5 fw-semibold">
                 $ {{ carts.final_total }} </div>
             </div>
@@ -136,7 +172,7 @@ export default {
             iconColor: 'var(--bs-primary)',
           });
           this.$refs.form.resetForm();
-          this.$router.push('/');
+          this.$router.push('/order');
         })
         .catch((error) => {
           Swal.fire({
@@ -181,6 +217,7 @@ export default {
 }
 
 .content {
+  margin-top: 4em;
   padding: 2em;
   border-radius: 20px;
 }
@@ -222,7 +259,7 @@ export default {
 }
 
 .order-img{
-  height: 40px;
+  height: 65px;
   overflow: hidden;
   margin-block: 0.5em;
   img {
@@ -235,6 +272,53 @@ export default {
 
 .loading {
   text-align: center;
+}
+
+/* stepper */
+.stepper-container {
+  position: relative;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 8%;
+}
+
+.stepper-line {
+  border: 1px solid var(--bs-secondary-bg-subtle);
+  width: 100%;
+  margin: 1em 0;
+  position: absolute;
+  top: 10%;
+  z-index: -10;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  span {
+    margin-top: 1em;
+  }
+}
+
+.step-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2px;
+  background-color: var(--bs-secondary-bg-subtle);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.step-circle.active {
+  box-shadow: 0 0 0 8px var(--bs-secondary-border-subtle);
 }
 
 @media (max-width: 1024px) {

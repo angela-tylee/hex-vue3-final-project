@@ -28,11 +28,11 @@
             <td>
               <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary btn-sm"
-                @click="openModal('edit', blog.id)">
+                @click="openModal('edit', blog)">
                 編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm"
-                @click="openModal('delete', blog.id)">
+                @click="openModal('delete', blog)">
                 刪除
                 </button>
               </div>
@@ -65,6 +65,11 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-sm-4">
+                <div class="mb-3">
+                  <label for="author" class="form-label">作者</label>
+                  <input id="author" type="text" class="form-control" placeholder="請輸入作者"
+                  v-model="temp.author">
+                </div>
                 <div class="mb-2">
                   <div class="mb-3">
                     <label for="imageUrl" class="form-label">輸入圖片網址</label>
@@ -80,15 +85,6 @@
                   <input id="title" type="text" class="form-control" placeholder="請輸入標題"
                   v-model="temp.title">
                 </div>
-
-                <div class="row">
-                  <div class="mb-3 col-md-6">
-                    <label for="author" class="form-label">作者</label>
-                    <input id="author" type="text" class="form-control" placeholder="請輸入作者"
-                    v-model="temp.author">
-                  </div>
-                </div>
-
                 <div class="row">
                   <div class="mb-3 col-md-12">
                     <label for="description" class="form-label">簡介</label>
@@ -98,12 +94,29 @@
                     </textarea>
                   </div>
                 </div>
-                <hr>
-
                 <div class="mb-3">
                   <label for="content" class="form-label">內容</label>
                   <textarea id="content" type="text" class="form-control" placeholder="請輸入文章內容"
                     v-model="temp.content">
+                    </textarea>
+                </div>
+                <hr>
+                <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input id="title" type="text" class="form-control" placeholder="請輸入標題"
+                  v-model="enTemp.title">
+                </div>
+                <div class="mb-3 col-md-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" type="text"
+                    class="form-control" placeholder="請輸入簡介"
+                    v-model="enTemp.description">
+                    </textarea>
+                  </div>
+                <div class="mb-3">
+                  <label for="content" class="form-label">Content</label>
+                  <textarea id="content" type="text" class="form-control" placeholder="請輸入文章內容"
+                    v-model="enTemp.content">
                     </textarea>
                 </div>
                 <div class="mb-3">
@@ -176,6 +189,7 @@ export default {
     return {
       blogs: [],
       temp: {},
+      enTemp: {},
       isNew: false,
       status: {
         listLoading: false,
@@ -210,6 +224,7 @@ export default {
         .then((response) => {
           console.log(response);
           this.temp = response.data.article;
+          this.enTemp = response.data.article.en;
           articleModal.show();
         })
         .catch((error) => {
@@ -219,7 +234,7 @@ export default {
           });
         });
     },
-    openModal(isNew, id) {
+    openModal(isNew, item) {
       if (isNew === 'new') {
         this.isNew = true;
         this.temp = {
@@ -228,8 +243,9 @@ export default {
         articleModal.show();
       } else if (isNew === 'edit') {
         this.isNew = false;
-        this.getArticle(id);
+        this.getArticle(item.id);
       } else if (isNew === 'delete') {
+        this.temp = { ...item };
         delArticleModal.show();
       }
     },
@@ -242,7 +258,7 @@ export default {
         http = 'put';
       }
 
-      axios[http](url, { data: this.temp })
+      axios[http](url, { data: { ...this.temp, en: this.enTemp } })
         .then((response) => {
           Swal.fire({
             title: response.data.message,

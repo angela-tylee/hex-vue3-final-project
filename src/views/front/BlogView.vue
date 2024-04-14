@@ -3,8 +3,8 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
-      <li class="breadcrumb-item"><RouterLink to="/blogs">Blog</RouterLink></li>
+      <li class="breadcrumb-item"><RouterLink to="/">{{ $t('header.home') }}</RouterLink></li>
+      <li class="breadcrumb-item"><RouterLink to="/blogs">{{ $t('header.blogs') }}</RouterLink></li>
       <li class="breadcrumb-item active text-primary" aria-current="page"
         v-if="!status.blogLoading">
         {{ blog.title }}
@@ -18,12 +18,14 @@
     </div>
 
   <!-- blog content -->
-    <div class="blog-title">
-      <h1>{{ blog.title }}</h1>
-      <p>{{ blog.description }}</p>
+    <div class="blog-container">
+      <div class="blog-title">
+        <h1>{{ blog.title }}</h1>
+        <p>{{ blog.description }}</p>
+      </div>
+      <div class="blog-img"><img :src="blog.image" alt="blog-img"></div>
+      <div class="blog-content" v-html="blog.content"></div>
     </div>
-    <div class="blog-img"><img :src="blog.image" alt="blog-img"></div>
-    <div class="blog-content" v-html="blog.content"></div>
   </div>
   <RouterView></RouterView>
 </template>
@@ -43,6 +45,14 @@ export default {
       },
     };
   },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        this.getArticle();
+      },
+      deep: true,
+    },
+  },
   methods: {
     getArticle() {
       const { id } = this.$route.params;
@@ -53,6 +63,16 @@ export default {
           this.status.blogLoading = false;
           console.log(response);
           this.blog = response.data.article;
+          if (this.$i18n.locale === 'zh-TW') {
+            this.blog = response.data.article;
+          } else if (this.$i18n.locale === 'en') {
+            const data = response.data.article;
+            this.blog = {
+              ...data.en,
+              id: data.id,
+              image: data.image,
+            };
+          }
         })
         .catch((error) => {
           this.status.blogLoading = false;
@@ -70,6 +90,10 @@ export default {
 </script>
 
 <style scoped>
+
+a {
+  text-decoration: none;
+}
 
 h1 {
   margin-top: 1em;
@@ -97,6 +121,12 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
   .spinner-border {
     margin: 3em;
     width: 5em;
@@ -104,4 +134,11 @@ h1 {
     --bs-spinner-border-width: 10px;
   }
 }
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 930px;
+  }
+}
+
 </style>

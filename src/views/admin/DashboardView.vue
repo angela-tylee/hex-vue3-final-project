@@ -4,11 +4,16 @@
         <img src="../../../public/logo/logo-dashboard-cream.png" alt="logo">
       </span>
       <ul>
-        <li><RouterLink to="/admin/products" class="text-cus-cream">產品列表</RouterLink></li>
-        <li><RouterLink to="/admin/orders" class="text-cus-cream">訂單列表</RouterLink></li>
-        <li><RouterLink to="/admin/blogs" class="text-cus-cream">文章列表</RouterLink></li>
-        <li><RouterLink to="/admin/coupons" class="text-cus-cream">折扣碼列表</RouterLink></li>
-        <li><RouterLink to="/" class="text-cus-cream">回到前台</RouterLink></li>
+        <li><RouterLink to="/admin/products" class="text-cus-cream"
+          :class="{ current: $route.path === '/admin/products' }">產品列表</RouterLink></li>
+        <li><RouterLink to="/admin/orders" class="text-cus-cream"
+          :class="{ current: $route.path === '/admin/orders' }">訂單列表</RouterLink></li>
+        <li><RouterLink to="/admin/blogs" class="text-cus-cream"
+          :class="{ current: $route.path === '/admin/blogs' }">文章列表</RouterLink></li>
+        <li><RouterLink to="/admin/coupons" class="text-cus-cream"
+          :class="{ current: $route.path === '/admin/coupons' }">折扣碼列表</RouterLink></li>
+        <li><RouterLink to="/" class="text-cus-cream"
+          :class="{ current: $route.path === '/' }">回到前台</RouterLink></li>
       </ul>
   </aside>
   <div class="content">
@@ -96,8 +101,13 @@ export default {
     text-decoration: none;
     font-size: 1.2rem;
     display: block;
+    &:hover {
+    background-color: #9d6424;
+    width: 150px;
+    border-radius: 20px;
+    }
   }
-  a:hover {
+  .current {
     background-color: #9d6424;
     width: 150px;
     border-radius: 20px;

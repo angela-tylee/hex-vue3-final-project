@@ -45,6 +45,16 @@ const routes = [
         name: 'Checkout',
         component: () => import('../views/front/CheckoutView.vue'),
       },
+      {
+        path: 'order',
+        name: 'Order',
+        component: () => import('../views/front/OrderConfirmView.vue'),
+      },
+      // 404
+      {
+        path: '/:pathMatch(.*)*',
+        component: () => import('../views/NotFountView.vue'),
+      },
     ],
   },
   {
@@ -84,6 +94,16 @@ const router = createRouter({
   history: createWebHashHistory(),
   linkActiveClass: 'active',
   routes,
+  // scrollBehavior(to, savedPosition) {
+  //   if (to.hash) {
+  //     return {
+  //       selector: to.hash,
+  //     };
+  //   } if (savedPosition) {
+  //     return savedPosition;
+  //   }
+  //   return { x: 0, y: 0 };
+  // },
 });
 
 export default router;

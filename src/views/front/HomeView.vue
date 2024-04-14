@@ -2,18 +2,18 @@
   <div class="hero">
     <div class="hero-content container">
       <h1 class="text-cus-cream">
-        Indulge in our mouth-watering dessert selection.
+        {{ $t('home.slogan') }}
       </h1>
-      <p class="text-cus-cream">Explore by flavor, type, or special offers!</p>
+      <p class="text-cus-cream">{{ $t('home.subheading') }}</p>
     </div>
   </div>
   <div class="container">
     <div class="intro homepage-block">
       <div class="intro-block">
         <div class="intro-content">
-          <h2>品味匠心，手工美點</h2>
+          <h2>{{ $t('home.intro-1') }}</h2>
           <p>
-            在每個甜點的背後，都蘊藏著一份匠心。我們的熟練工匠精心製作，每一口都是一場藝術的饗宴。無論是那一款蛋糕或是精緻的糕點，都讓您感受到家的溫暖和味蕾的滿足。
+            {{ $t('home.intro-content-1') }}
           </p>
         </div>
         <div class="intro-img-container">
@@ -31,19 +31,17 @@
           />
         </div>
         <div class="intro-content">
-          <h2>純天然原料</h2>
+          <h2>{{ $t('home.intro-2') }}</h2>
           <p>
-            我們將大自然的恩賜化為美味的魔法。
-            從麵粉、雞蛋到奶油，每一種原料都經過精心挑選，讓您嘗到的不僅是味道，更是一份對健康和品質的堅持。讓我們的甜點，成為您與大自然的美好邂逅。
+            {{ $t('home.intro-content-2') }}
           </p>
         </div>
       </div>
       <div class="intro-block">
         <div class="intro-content">
-          <h2>甜蜜魔法</h2>
+          <h2>{{ $t('home.intro-3') }}</h2>
           <p>
-            來感受一場甜蜜的魔法之旅，
-            從麵粉、雞蛋到奶油，每一步都是一場奇妙的舞蹈，融合出風味和口感的完美交響樂。讓我們的甜點，成為您味蕾上的奇幻冒險。
+            {{ $t('home.intro-content-3') }}
           </p>
         </div>
         <div class="intro-img-container">
@@ -57,62 +55,65 @@
     <div class="service homepage-block">
       <div class="service-1">
         <i class="bi bi-calendar-check-fill" style="font-size: 40px"></i>
-        <h3>3天前預訂</h3>
+        <h3>{{ $t('home.reservation') }}</h3>
         <p>
-          我們誠摯地請求您至少提前三天預約，讓我們有充足的時間，以最貼心、細緻的方式為您準備訂單
+          {{ $t('home.reservation-content') }}
         </p>
       </div>
       <div class="service-2">
         <i class="bi bi-truck" style="font-size: 40px"></i>
-        <h3>美味直送</h3>
+        <h3>{{ $t('home.delivery') }}</h3>
         <p>
-          我們非常高興地提供專屬於台灣顧客的送貨服務，帶著我們出色的產品直接送到您的家門口。期待能為您提供最優質的購物體驗！
+          {{ $t('home.delivery-content') }}
         </p>
       </div>
     </div>
     <div class="recommendation homepage-block block-title">
       <h2 class="text-center">
-        <span>Recommendation</span>
+        <span>{{ $t('home.recommendation') }}</span>
       </h2>
       <div>
         <h3 class="mt-5">Cake</h3>
         <div class="recommendation-cards">
           <div v-for="product in filteredCake" :key="product.id">
-            <div class="img-container">
-              <img :src="product.imageUrl" alt="product-img" />
+            <RouterLink :to="`/product/${product.id}`">
+              <div class="img-container">
+                <img :src="product.imageUrl" alt="product-img" />
+              </div>
+              <h5 v-if="$i18n.locale === 'zh-TW'">{{ product.title }}</h5>
+              <h5 v-if="$i18n.locale === 'en'">{{ product.en.title }}</h5>
+            </RouterLink>
             </div>
-              <h5>
-                <RouterLink :to="`/product/${product.id}`">{{ product.title }}</RouterLink>
-              </h5>
-          </div>
         </div>
       </div>
       <div>
         <h3 class="mt-5">Tart</h3>
         <div class="recommendation-cards">
           <div v-for="product in filteredTart" :key="product.id">
-            <div class="img-container">
-              <img :src="product.imageUrl" alt="product-img" />
+            <RouterLink :to="`/product/${product.id}`">
+              <div class="img-container">
+                <img :src="product.imageUrl" alt="product-img" />
+              </div>
+              <h5 v-if="$i18n.locale === 'zh-TW'">{{ product.title }}</h5>
+              <h5 v-if="$i18n.locale === 'en'">{{ product.en.title }}</h5>
+            </RouterLink>
             </div>
-              <h5>
-                <RouterLink :to="`/product/${product.id}`">{{ product.title }}</RouterLink>
-              </h5>
-          </div>
         </div>
       </div>
     </div>
     <div class="blog homepage-block">
       <h2 class="text-center block-title">
-        <RouterLink to="/blogs"><span>Explore our blog</span></RouterLink>
+        <RouterLink to="/blogs"><span>{{ $t('home.blog') }}</span></RouterLink>
       </h2>
       <div class="blog-cards">
         <div v-for="article in filteredBlog" :key="article.id">
-          <div class="img-container">
-            <img :src="article.image" alt="blog-img" />
-          </div>
-          <h5>
-            <RouterLink :to="`/blog/${article.id}`">{{ article.title }}</RouterLink>
-          </h5>
+          <RouterLink :to="`/blog/${article.id}`">
+            <div class="img-container">
+              <img :src="article.image" alt="blog-img" />
+            </div>
+            <h5 v-if="$i18n.locale === 'zh-TW'">{{ article.title }}</h5>
+            <h5 v-if="$i18n.locale === 'en'">{{ article.en.title }}</h5>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -135,6 +136,15 @@ export default {
         blogsLoading: false,
       },
     };
+  },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        this.getData();
+        this.getArticle();
+      },
+      deep: true,
+    },
   },
   methods: {
     getData() {
@@ -200,35 +210,6 @@ a {
   text-decoration: none;
 }
 
-.homepage-block {
-  margin-top: 5em;
-}
-
-.recommendation-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2em;
-  h5 {
-    margin-top: 1.5em;
-    text-align: center;
-  }
-  img {
-    border-radius: 15px;
-  }
-}
-
-.blog-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2em;
-  h5 {
-    margin-top: 1.5em;
-  }
-  img {
-    border-radius: 15px;
-  }
-}
-
 .hero {
   height: 300px;
   padding-block: 5em;
@@ -241,19 +222,23 @@ a {
 }
 
 .intro-block {
-  margin-top: 3em;
-  height: 600px;
+  margin-top: 1em;
+  height: 300px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 6fr 4fr;
   gap: 2em;
   .intro-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+  &:nth-of-type(2) {
+    grid-template-columns: 4fr 6fr;
+  }
 }
 
 .intro {
+  margin-top: 3em;
   img {
     width: 100%;
     border-radius: 10px;
@@ -261,7 +246,6 @@ a {
 }
 
 .service {
-  margin-top: 3em;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   .service-1 {
@@ -291,6 +275,31 @@ a {
   }
 }
 
+.recommendation-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2em;
+  h5 {
+    margin-top: 1.5em;
+    text-align: center;
+  }
+  img {
+    border-radius: 15px;
+  }
+}
+
+.blog-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2em;
+  h5 {
+    margin-top: 1.5em;
+  }
+  img {
+    border-radius: 15px;
+  }
+}
+
 .img-container {
   width: 100%;
   height: 300px;
@@ -300,16 +309,30 @@ a {
     height: 100%;
     object-fit: cover;
   }
+  transition: all 0.5s;
+    &:hover{
+      transform: scale(1.02);
+      cursor: pointer;
+    }
+}
+
+.homepage-block {
+  margin-bottom: 10em;
 }
 
 @media (max-width: 1024px) {
   .intro-block {
+    margin-top: 3em;
+    height: 800px;
     grid-template-columns: 1fr;
-    gap: 2em;
     .intro-img-container {
       grid-row: 2;
     }
+    &:nth-of-type(2){
+      grid-template-columns: 1fr;
+    }
   }
+
   .service {
     grid-template-columns: 1fr;
     text-align: center;
@@ -321,9 +344,30 @@ a {
       padding-left: 0em;
     }
   }
+}
+
+@media (max-width: 768px) {
+  .intro-block {
+    height: 450px;
+  }
+
+  .homepage-block {
+    margin-bottom: 6em;
+  }
   .recommendation-cards,
   .blog-cards {
-    grid-template-columns: 1fr;
+    .img-container {
+      height: 20vh;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .recommendation-cards,
+  .blog-cards {
+    .img-container {
+      height: 10vh;
+    }
   }
 }
 </style>

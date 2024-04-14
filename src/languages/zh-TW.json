@@ -1,0 +1,80 @@
+{
+  "header": {
+    "home": "首頁",
+    "products": "甜點",
+    "blogs": "部落格",
+    "about": "認識我們",
+    "language": "繁體中文"
+  },
+  "footer": {
+    "log-in": "登入後台",
+    "admin": "後台頁面",
+    "for-learning": "僅供學習使用，非商業用途"
+  },
+  "home": {
+    "slogan": "沉醉於我們令人垂涎的甜點",
+    "subheading": "探索多種風味、甜點或不定期驚喜！",
+    "intro-1":"品味匠心，手工美點",
+    "intro-content-1":"在每個甜點的背後，都蘊藏著一份匠心。我們的熟練工匠精心製作，每一口都是一場藝術的饗宴。無論是那一款蛋糕或是精緻的糕點，都讓您感受到家的溫暖和味蕾的滿足。",
+    "intro-2":"大自然恩賜，純天然原料",
+    "intro-content-2":"我們將大自然的恩賜化為美味的魔法。從麵粉、雞蛋到奶油，每一種原料都經過精心挑選，讓您嘗到的不僅是味道，更是一份對健康和品質的堅持。讓我們的甜點，成為您與大自然的美好邂逅。",
+    "intro-3":"甜蜜魔法，完美蛋糕麵糊",
+    "intro-content-3":"來感受一場甜蜜的魔法之旅，從麵粉、雞蛋到奶油，每一步都是一場奇妙的舞蹈，融合出風味和口感的完美交響樂。讓我們的甜點，成為您味蕾上的奇幻冒險。",
+    "reservation":"3天前預訂",
+    "reservation-content":"我們誠摯地請求您至少提前三天預約，讓我們有充足的時間，以最貼心、細緻的方式為您準備訂單",
+    "delivery":"美味直送",
+    "delivery-content":"我們非常高興地提供專屬於台灣顧客的送貨服務，帶著我們出色的產品直接送到您的家門口。期待能為您提供最優質的購物體驗！",
+    "recommendation":"為你推薦",
+    "blog":"了解更多"
+  },
+  "cart": {
+    "shopping-cart": "購物車",
+    "item": "品項",
+    "price": "單價",
+    "quantity": "數量",
+    "total": "金額",
+    "remove-cart-all": "清空購物車",
+    "order-summary": "訂單",
+    "total-qty": "數量",
+    "subtotal": "小計",
+    "discount": "折扣碼",
+    "apply-discount": "套用",
+    "coupon-applied": "已套用優惠券！",
+    "final-total": "總計",
+    "checkout": "前往結賬",
+    "cart-empty": "購物車沒有東西！",
+    "continue-shopping": "回去逛逛"
+  },
+  "checkout": {
+    "heading": "訂購資訊",
+    "name": "收件人姓名",
+    "name-placeholder": "請輸入姓名",
+    "email": "收件人電子信箱",
+    "email-placeholder": "請輸入電子信箱",
+    "tel": "收件人電話",
+    "tel-placeholder": "請輸入電話",
+    "address": "收件人地址",
+    "address-placeholder": "請輸入地址",
+    "comment": "備註(選填)",
+    "submit-button": "送出訂單",
+    "order": "您的訂單"
+  },
+  "confirm": {
+    "thanks": "我們已收到您的訂單！",
+    "home": "回到首頁",
+    "shopping": "繼續購物"
+  },
+  "404": {
+    "p": "哎呀，你正在尋找的甜點不存在！回去逛逛其他的吧",
+    "button": "再去逛逛"
+  },
+  "stepper": {
+    "shopping": "選擇甜點",
+    "cart": "確認訂單",
+    "checkout": "送出訂單",
+    "confirm": "完成訂單"
+  },
+  "button": {
+    "add-to-cart": "加到購物車"
+  }
+}

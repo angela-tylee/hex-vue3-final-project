@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
     <div class="wrapper-header">
-      <header class="bg-primary">
+      <header class="bg-primary"
+      :class="{ 'fixed-nav': isFixed }" ref="nav">
         <div class="container header-content">
           <span class="logo">
             <RouterLink to="/"
@@ -16,7 +17,7 @@
                   class="text-cus-cream text-decoration-none"
                   @click.prevent="toggleMenu"
                 >
-                  Desserts</RouterLink
+                  {{ $t('header.products') }}</RouterLink
                 >
               </li>
               <li>
@@ -25,7 +26,7 @@
                   class="text-cus-cream text-decoration-none"
                   @click.prevent="toggleMenu"
                 >
-                  Blog</RouterLink
+                  {{ $t('header.blogs') }}</RouterLink
                 >
               </li>
               <li>
@@ -34,7 +35,7 @@
                   class="text-cus-cream text-decoration-none"
                   @click.prevent="toggleMenu"
                 >
-                  Our Story</RouterLink
+                {{ $t('header.about') }}</RouterLink
                 >
               </li>
             </ul>
@@ -51,6 +52,13 @@
                   ></i>
                 </RouterLink>
               </li>
+              <div class="language-icon-container" style="font-size: 10px; text-align: center">
+                <i class="bi bi-translate text-cus-cream language-icon" style="font-size: 20px"
+                @click="toggleLanguage"></i>
+                <br>
+                <span class="text-cus-cream" v-if="$i18n.locale === 'en'">English</span>
+                <span class="text-cus-cream" v-if="$i18n.locale === 'zh-TW'">繁體中文</span>
+              </div>
             </ul>
           </nav>
           <div class="mobile-menu" @click.prevent="toggleMenu">
@@ -58,23 +66,23 @@
           </div>
         </div>
       </header>
-      <RouterView></RouterView>
+        <RouterView></RouterView>
     </div>
     <footer class="bg-primary">
       <div class="container footer-content text-cus-cream">
         <div class="footer-nav">
           <RouterLink to="/log-in" class="text-cus-cream text-decoration-none">
-            登入後台 |
+            {{ $t('footer.log-in') }} |
           </RouterLink>
           <RouterLink
           to="/admin/products"
           class="text-cus-cream text-decoration-none"
           >
-          後台頁面</RouterLink
+          {{ $t('footer.admin') }}</RouterLink
           >
         </div>
         <span class="text-cus-cream">copyright@angelalee</span>
-        <p class="text-cus-cream mb-0">僅供學習使用，非商業用途</p>
+        <p class="text-cus-cream mb-0">{{ $t('footer.for-learning') }}</p>
       </div>
     </footer>
   </div>
@@ -95,7 +103,15 @@ export default {
       status: {
         cartLoading: false,
       },
+      isFixed: false,
     };
+  },
+  watch: {
+    'this.carts': {
+      handler() {
+        this.getCartQty();
+      },
+    },
   },
   methods: {
     toggleMenu() {
@@ -140,9 +156,26 @@ export default {
           });
         });
     },
+    toggleLanguage() {
+      if (this.$i18n.locale === 'zh-TW') {
+        this.$i18n.locale = 'en';
+      } else {
+        this.$i18n.locale = 'zh-TW';
+      }
+    },
+    fixNav() {
+      if (window.scrollY > 0) {
+        this.isFixed = true;
+      } else {
+        this.isFixed = false;
+      }
+    },
   },
   mounted() {
     this.getCart();
+    this.nav = this.$refs.nav;
+    console.dir(this.nav);
+    window.addEventListener('scroll', this.fixNav);
   },
 };
 </script>
@@ -177,6 +210,13 @@ export default {
         margin: 1em;
       }
     }
+    .language-icon-container {
+      transition: all 0.1s;
+      &:hover{
+        cursor: pointer;
+        transform: scale(1.1);
+      }
+    }
     .cart-icon-container {
       transition: all 0.1s;
       &:hover{
@@ -208,6 +248,16 @@ export default {
   }
 }
 
+/* sticky nav */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* hamburger menu */
 .menuToggle {
   display: none;
   cursor: pointer;
@@ -221,6 +271,10 @@ export default {
   margin: 5px 0;
 }
 
+.mobile-menu {
+  display: none;
+}
+
 footer {
   margin-top: 2em;
   padding-block: 2em;
@@ -231,10 +285,6 @@ footer {
     align-items: center;
     justify-content: space-between;
   }
-}
-
-.mobile-menu {
-  display: none;
 }
 
 @media (max-width: 590px) {
@@ -256,7 +306,7 @@ footer {
         top: 50px;
         left: 0;
         width: 100%;
-        z-index: 1;
+        z-index: 1000;
       }
 
       .nav-bar.active {

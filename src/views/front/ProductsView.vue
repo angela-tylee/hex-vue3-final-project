@@ -4,13 +4,9 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><RouterLink to="/">Home</RouterLink></li>
+        <li class="breadcrumb-item"><RouterLink to="/">{{ $t('header.home') }}</RouterLink></li>
         <li class="breadcrumb-item">
-          <RouterLink to="/products">Desserts</RouterLink>
-        </li>
-        <li class="breadcrumb-item active text-primary" aria-current="page"
-          v-if="$route.query.category !== undefined">
-          {{ $route.query.category }}
+          <RouterLink to="/products">{{ $t('header.products') }}</RouterLink>
         </li>
       </ol>
     </nav>
@@ -41,16 +37,22 @@
                 <ul class="category-list list-unstyled">
                   <li>
                     <RouterLink to="/products" class="py-2 d-block"
-                      >全部</RouterLink
+                    :class="{ current: $route.query.category === undefined }"
+                      >
+                      <span v-if="$i18n.locale === 'zh-TW'">全部</span>
+                      <span v-if="$i18n.locale === 'en'">All</span>
+                    </RouterLink
                     >
                   </li>
                   <li v-for="category in categories" :key="category">
                     <RouterLink
-                      :to="`/products?category=${category.category}`"
-                      :class="{ active: category.active }"
-                      @click="setActive(category)"
+                      :to="`/products?category=${category.zh}`"
+                      :class="{ current: $route.query.category === category.zh }"
                       class="py-2 d-block"
-                      >{{ category.category }}</RouterLink
+                      >
+                      <span v-if="$i18n.locale === 'zh-TW'">{{ category.zh }}</span>
+                      <span v-if="$i18n.locale === 'en'">{{ category.en }}</span>
+                      </RouterLink
                     >
                   </li>
                 </ul>
@@ -100,7 +102,7 @@
                 href="#"
                 @click.prevent="getData(pages.current_page - 1)"
               >
-                Previous</a
+                {{ $t('page.previous') }}</a
               >
             </li>
             <li
@@ -120,7 +122,7 @@
                 href="#"
                 @click.prevent="getData(pages.current_page + 1)"
               >
-                Next</a
+              {{ $t('page.next') }}</a
               >
             </li>
           </ul>
@@ -143,11 +145,11 @@ export default {
       products: [],
       pages: {},
       categories: [
-        { category: '蛋糕', active: false },
-        { category: '起司蛋糕', active: false },
-        { category: '派 / 塔', active: false },
-        { category: '麵包', active: false },
-        { category: '其他', active: false },
+        { zh: '蛋糕', en: 'Cake' },
+        { zh: '起司蛋糕', en: 'Cheesecake' },
+        { zh: '派 / 塔', en: 'Pie / Tart' },
+        { zh: '麵包', en: 'Bread' },
+        { zh: '其他', en: 'Others' },
       ],
       status: {
         productsLoading: false,
@@ -162,6 +164,12 @@ export default {
       },
       deep: true,
     },
+    '$i18n.locale': {
+      handler() {
+        this.getData();
+      },
+      deep: true,
+    },
   },
   methods: {
     getData(page = 1) {
@@ -171,8 +179,24 @@ export default {
       axios.get(url)
         .then((response) => {
           this.status.productsLoading = false;
-          this.products = response.data.products;
           this.pages = response.data.pagination;
+          this.products = [];
+          console.log(response.data.products);
+          if (this.$i18n.locale === 'zh-TW') {
+            this.products = response.data.products;
+          } else if (this.$i18n.locale === 'en') {
+            response.data.products.forEach((product) => {
+              this.products.push(
+                {
+                  ...product.en,
+                  id: product.id,
+                  imageUrl: product.imageUrl,
+                  price: product.price,
+                  origin_price: product.origin_price,
+                },
+              );
+            });
+          }
         })
         .catch((error) => {
           Swal.fire({
@@ -241,18 +265,22 @@ a {
   }
 }
 
-.category-list {
-  li a {
-    padding-inline: 0.5em;
-    &:hover {
-      background-color: var(--bs-cus-cream);
-      border-radius: 5px;
+.category-list li {
+    a {
+      padding-inline: 0.5em;
+      color: var(--bs-primary);
+      &:hover {
+        background-color: var(--bs-cus-cream);
+        border-radius: 5px;
+      }
     }
-    .active {
-      background-color: var(--bs-cus-cream);
-      border-radius: 5px;
+    .current {
+        background-color: var(--bs-primary);
+        border-radius: 5px;
+        span {
+          color: var(--bs-cus-cream);
+        }
     }
-  }
 }
 
 .products-grid {
@@ -293,7 +321,6 @@ a {
     &:hover{
       transform: scale(1.02);
     }
-
   }
   .product-content-flex{
     display: flex;
