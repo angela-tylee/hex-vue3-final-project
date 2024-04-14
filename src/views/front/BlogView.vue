@@ -61,7 +61,6 @@ export default {
       axios.get(url)
         .then((response) => {
           this.status.blogLoading = false;
-          console.log(response);
           this.blog = response.data.article;
           if (this.$i18n.locale === 'zh-TW') {
             this.blog = response.data.article;

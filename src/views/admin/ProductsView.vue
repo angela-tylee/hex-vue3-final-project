@@ -262,7 +262,6 @@ export default {
       this.status.listLoading = true;
       axios.get(url)
         .then((response) => {
-          console.log(response);
           this.products = response.data.products;
           this.status.listLoading = false;
         })

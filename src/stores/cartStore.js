@@ -20,7 +20,6 @@ export default defineStore('cartStore', {
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
         .then((response) => {
           this.storeStatus.cartLoading = false;
-          console.log(response);
           this.carts = response.data.data;
           this.cartLength = this.carts.carts.length;
           this.getCartQty();

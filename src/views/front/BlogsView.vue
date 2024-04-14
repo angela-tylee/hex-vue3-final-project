@@ -62,7 +62,6 @@ export default {
         .get(url)
         .then((response) => {
           this.status.blogsLoading = false;
-          console.log(response.data.articles);
           this.blogs = response.data.articles;
         })
         .catch((error) => {

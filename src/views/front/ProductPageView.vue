@@ -95,10 +95,8 @@ export default {
     return {
       product: {},
       similarProducts: [],
-      // cart: {},
       status: {
         pageLoading: false,
-        // addCartLoading: '',
       },
       qty: 1,
     };
@@ -120,7 +118,6 @@ export default {
 
       axios.get(url)
         .then((response) => {
-          console.log(response.data.product);
           this.status.pageLoading = false;
           this.product = response.data.product;
           if (this.$i18n.locale === 'zh-TW') {
@@ -144,31 +141,6 @@ export default {
           });
         });
     },
-    // addToCart(product, qty = 1) {
-    //   const order = {
-    //     product_id: product.id,
-    //     qty,
-    //   };
-    //   this.status.addCartLoading = order.product_id;
-    //   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`, { data: order })
-    //     .then(() => {
-    //       this.status.addCartLoading = '';
-    //       Swal.fire({
-    //         title: '已加入購物車!',
-    //         icon: 'success',
-    //         confirmButtonColor: 'var(--bs-primary)',
-    //         iconColor: 'var(--bs-primary)',
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       Swal.fire({
-    //         title: error.response.data.message,
-    //         confirmButtonColor: 'var(--bs-danger)',
-    //       });
-    //       this.status.addCartLoading = '';
-    //     });
-    // },
-    ...mapActions(cartStore, ['addToCart']),
     changeQty(num) {
       this.qty = num;
     },
@@ -186,6 +158,7 @@ export default {
           });
         });
     },
+    ...mapActions(cartStore, ['addToCart']),
   },
   computed: {
     ...mapState(cartStore, ['storeStatus']),

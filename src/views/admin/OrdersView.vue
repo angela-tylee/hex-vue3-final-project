@@ -114,7 +114,6 @@ export default {
       this.status.listLoading = true;
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/admin/orders`)
         .then((response) => {
-          console.log(response);
           this.orders = response.data.orders;
           this.status.listLoading = false;
         })

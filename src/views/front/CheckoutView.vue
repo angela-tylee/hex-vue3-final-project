@@ -186,7 +186,6 @@ export default {
       axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
         .then((response) => {
           this.status.cartLoading = false;
-          console.log(response);
           this.carts = response.data.data;
         })
         .catch((error) => {

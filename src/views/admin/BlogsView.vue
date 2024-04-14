@@ -202,7 +202,6 @@ export default {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/articles`;
       axios.get(url)
         .then((response) => {
-          console.log(response.data.articles);
           this.blogs = response.data.articles;
           this.status.listLoading = false;
         })
@@ -212,7 +211,6 @@ export default {
             confirmButtonColor: 'var(--bs-danger)',
           });
           this.status.listLoading = false;
-          console.log(error.response.status);
           if (error.response.status === 401) {
             this.$router.push('/log-in');
           }
@@ -222,7 +220,6 @@ export default {
       const url = `${VITE_API_URL}/api/${VITE_API_PATH}/admin/article/${id}`;
       axios.get(url)
         .then((response) => {
-          console.log(response);
           this.temp = response.data.article;
           this.enTemp = response.data.article.en;
           articleModal.show();
@@ -266,7 +263,6 @@ export default {
             confirmButtonColor: 'var(--bs-primary)',
             iconColor: 'var(--bs-primary)',
           });
-          console.log(response);
           articleModal.hide();
           this.getArticles();
         })

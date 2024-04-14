@@ -89,23 +89,14 @@
 </template>
 
 <script>
-// import axios from 'axios';
-// import Swal from 'sweetalert2';
 import { mapState, mapActions } from 'pinia';
 import cartStore from '../stores/cartStore';
-
-// const { VITE_API_URL, VITE_API_PATH } = import.meta.env;
 
 export default {
   data() {
     return {
       isMenuOpen: false,
       isFixed: false,
-      // carts: {},
-      // cartQty: 0,
-      // status: {
-      //   cartLoading: false,
-      // },
     };
   },
   watch: {
@@ -123,45 +114,6 @@ export default {
       this.isMenuOpen = !this.isMenuOpen;
     },
     ...mapActions(cartStore, ['getCart', 'getCartQty', 'changeCartQty']),
-    // getCart() {
-    //   this.status.cartLoading = true;
-    //   axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
-    //     .then((response) => {
-    //       this.status.cartLoading = false;
-    //       console.log(response);
-    //       this.carts = response.data.data;
-    //       this.getCartQty();
-    //     })
-    //     .catch((error) => {
-    //       Swal.fire({
-    //         title: error.response.data.message,
-    //         confirmButtonColor: 'var(--bs-danger)',
-    //       });
-    //       this.status.cartLoading = false;
-    //     });
-    // },
-    // getCartQty() {
-    //   this.cartQty = 0;
-    //   this.carts.carts.forEach((cart) => {
-    //     this.cartQty += cart.qty;
-    //   });
-    // },
-    // changeCartQty(item, qty = 1) {
-    //   const order = {
-    //     product_id: item.product.id,
-    //     qty,
-    //   };
-    //   axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
-    //     .then(() => {
-    //       this.getCart();
-    //     })
-    //     .catch((error) => {
-    //       Swal.fire({
-    //         title: error.response.data.message,
-    //         confirmButtonColor: 'var(--bs-danger)',
-    //       });
-    //     });
-    // },
     toggleLanguage() {
       if (this.$i18n.locale === 'zh-TW') {
         this.$i18n.locale = 'en';
@@ -180,7 +132,6 @@ export default {
   mounted() {
     this.getCart();
     this.nav = this.$refs.nav;
-    console.dir(this.nav);
     window.addEventListener('scroll', this.fixNav);
   },
 };

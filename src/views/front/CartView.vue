@@ -127,7 +127,7 @@
           </div>
         </div>
         <div class="col-12 mt-4">
-          <button type="button" class="btn btn-cus-cream text-primary"
+          <button type="button" class="checkout-button btn btn-cus-cream text-primary"
           :disabled="cartLength === 0">
             <RouterLink to="/checkout">
             {{ $t('cart.checkout') }}
@@ -182,17 +182,12 @@ let removeCartAllModal = '';
 export default {
   data() {
     return {
-      // carts: {},
-      // cartQty: 0,
-      // cartLength: '',
       coupon: {
         code: '',
         success: false,
       },
       status: {
-        // addCartLoading: '',
         removeCartLoading: false,
-        // cartLoading: false,
         couponLoading: false,
       },
     };
@@ -210,46 +205,6 @@ export default {
   },
   methods: {
     ...mapActions(cartStore, ['getCart', 'changeCartQty', 'getCartQty']),
-    // getCart() {
-    //   this.status.cartLoading = true;
-    //   axios.get(`${VITE_API_URL}/api/${VITE_API_PATH}/cart`)
-    //     .then((response) => {
-    //       this.status.cartLoading = false;
-    //       console.log(response);
-    //       this.carts = response.data.data;
-    //       this.cartLength = this.carts.carts.length;
-    //       this.getCartQty();
-    //     })
-    //     .catch((error) => {
-    //       Swal.fire({
-    //         title: error.response.data.message,
-    //         confirmButtonColor: 'var(--bs-danger)',
-    //       });
-    //       this.status.cartLoading = false;
-    //     });
-    // },
-    // changeCartQty(item, qty = 1) {
-    //   const order = {
-    //     product_id: item.product.id,
-    //     qty,
-    //   };
-    //   axios.put(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${item.id}`, { data: order })
-    //     .then(() => {
-    //       this.getCart();
-    //     })
-    //     .catch((error) => {
-    //       Swal.fire({
-    //         title: error.response.data.message,
-    //         confirmButtonColor: 'var(--bs-danger)',
-    //       });
-    //     });
-    // },
-    // getCartQty() {
-    //   this.cartQty = 0;
-    //   this.carts.carts.forEach((cart) => {
-    //     this.cartQty += cart.qty;
-    //   });
-    // },
     removeCartItem(id) {
       axios.delete(`${VITE_API_URL}/api/${VITE_API_PATH}/cart/${id}`)
         .then(() => {
@@ -295,7 +250,6 @@ export default {
       axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/coupon`, { data: coupon })
         .then((response) => {
           this.status.couponLoading = false;
-          console.log(response);
           this.coupon.success = response.data.success;
         })
         .catch((error) => {
@@ -372,6 +326,10 @@ button a {
     object-fit: cover;
     border-radius: 5px;
   }
+}
+
+.checkout-button {
+  width: 100%;
 }
 
 /* stepper */

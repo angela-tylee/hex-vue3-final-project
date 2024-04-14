@@ -173,7 +173,6 @@ export default {
       this.status.listLoading = true;
       axios.get(url)
         .then((response) => {
-          console.log(response.data.coupons);
           this.coupons = response.data.coupons;
           this.status.listLoading = false;
         })
@@ -199,7 +198,6 @@ export default {
 
       axios[http](url, { data: this.temp })
         .then((response) => {
-          console.log(response.message);
           Swal.fire({
             title: response.data.message,
             icon: 'success',
@@ -261,23 +259,6 @@ export default {
     delCouponModal = new bootstrap.Modal(document.getElementById('delProductModal'));
   },
 };
-// createCoupon() {
-//   const coupon = {
-//     title: 'Evergreen Discount',
-//     is_enabled: 1,
-//     percent: 80,
-//     due_date: 2556115199,
-//     code: 'SWEETTOOTH2024',
-//   };
-//   axios.post(`${VITE_API_URL}/api/${VITE_API_PATH}/admin/coupon`, { data: coupon })
-//     .then((response) => {
-//       console.log(response);
-//       // this.carts = response.data.data;
-//     })
-//     .catch((error) => {
-//       alert(error.response.data.message);
-//     });
-// },
 </script>
 
 <style>
