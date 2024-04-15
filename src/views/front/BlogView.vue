@@ -118,6 +118,10 @@ h1 {
   margin-top: 2em;
 }
 
+.blog-content :deep(h3) {
+  margin-top: 2em;
+}
+
 .blog-img {
   img {
     width: 100%;
