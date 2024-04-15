@@ -73,11 +73,9 @@
                 v-model="form.message"></textarea>
               </div>
               <div class="text-end">
-                <RouterLink :to="`/order`">
                   <button type="submit" class="btn btn-primary">
                     {{ $t('checkout.submit-button') }}
                   </button>
-                </RouterLink>
               </div>
             </v-form>
           </div>

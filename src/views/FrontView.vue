@@ -233,7 +233,6 @@ export default {
 }
 
 footer {
-  margin-top: 2em;
   padding-block: 2em;
   flex-shrink: 0;
   .footer-content {

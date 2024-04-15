@@ -266,13 +266,14 @@ export default {
           this.status.listLoading = false;
         })
         .catch((error) => {
-          Swal.fire({
-            title: error.response.data.message,
-            confirmButtonColor: 'var(--bs-danger)',
-          });
           this.status.listLoading = false;
           if (error.response.status === 401) {
             this.$router.push('/log-in');
+          } else {
+            Swal.fire({
+              title: error.response.data.message,
+              confirmButtonColor: 'var(--bs-danger)',
+            });
           }
         });
     },

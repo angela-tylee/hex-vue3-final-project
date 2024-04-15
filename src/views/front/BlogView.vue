@@ -90,6 +90,10 @@ export default {
 
 <style scoped>
 
+.container {
+  margin-bottom: 5em;
+}
+
 a {
   text-decoration: none;
 }
@@ -100,6 +104,10 @@ h1 {
 
 .breadcrumb {
   margin-top: 3em;
+}
+
+.blog-container {
+  font-size: 1.25rem;
 }
 
 .blog-content {
@@ -137,6 +145,21 @@ h1 {
 @media (min-width: 1024px) {
   .container {
     max-width: 930px;
+  }
+  .blog-container {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .blog-container {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-container {
+    font-size: 1rem;
   }
 }
 

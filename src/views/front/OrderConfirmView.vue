@@ -25,14 +25,17 @@
 <style scoped>
 
 .container {
-  margin-block: 8em 5em;
+  margin-block: 5em;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.content {
-  margin-top: 2em;
-  padding: 2em;
-  border-radius: 20px;
-}
+/* .grid {
+  height: 100vh;
+} */
 
 .check-icon-block{
   display: flex;
@@ -47,7 +50,7 @@
   gap: 1em;
   margin-top: 1em;
   button {
-    width: 180px;
+    width: 100%;
     font-size: 0.8rem;
   }
 }
