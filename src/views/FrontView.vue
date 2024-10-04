@@ -81,7 +81,7 @@
           {{ $t('footer.admin') }}</RouterLink
           >
         </div>
-        <span class="text-cus-cream">copyright@angelalee</span>
+        <span class="text-cus-cream">© 2024 Angela Lee. All Rights Reserved.</span>
         <p class="text-cus-cream mb-0">{{ $t('footer.for-learning') }}</p>
       </div>
     </footer>
